@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'order_status_update' => 'Order Status Update',
+    'hi' => 'Hi :fullname,',
+    'status_updated' => 'We wanted to let you know that the status of your order has been updated.',
+    'order_details' => 'Order Details:',
+    'full_name' => 'Full Name:',
+    'phone_number' => 'Phone Number:',
+    'location' => 'Location:',
+    'postal_code' => 'Postal Code:',
+    'email' => 'Email:',
+    'status_of_payment' => 'Status of Payment:',
+    'order_status' => 'Order Status:',
+    'shipping_status' => 'Shipping Status:',
+    'delivered_message' => 'Your order has been :status successfully! We hope you enjoy your purchase.',
+    'complete_message' => 'Your order is now marked as :status. Thank you for shopping with us!',
+    'canceled_message' => 'We regret to inform you that your order has been :status. If you have any questions or need assistance, please contact us.',
+    'questions_contact' => 'If you have any questions or need further assistance, please feel free to contact us.',
+    'call_us' => 'Call Us: :phone',
+    'address' => 'Schrannenstraße 58, 86633 Neuburg an der Donau, Germany',
+    'thank_you' => 'Thank you for choosing our service!',
+    'copyright' => '© 2024 YUMIIS PIZZA. All rights reserved.',
+    'unsubscribe' => 'Unsubscribe',
+    'manage_preferences' => 'Manage Preferences',
+];

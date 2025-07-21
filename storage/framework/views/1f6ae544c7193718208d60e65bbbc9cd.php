@@ -1,0 +1,1 @@
+<?php /**PATH /home/u397680723/domains/soltriks.com/public_html/apiyumiis/resources/views/components/welcome.blade.php ENDPATH**/ ?>

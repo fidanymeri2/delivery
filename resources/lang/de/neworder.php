@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'new_orders' => 'New Order',
+    'delivered_orders' => 'On the way',
+    'completed_orders' => 'Delivered',
+    'canceled_orders' => 'Canceled',
+    'order_code' => 'Order Code',
+    'full_name' => 'Full Name',
+    'phone_number' => 'Phone Number',
+    'location' => 'Location',
+    'email' => 'Email',
+    'status_of_payment' => 'Status of Payment',
+    'date' => 'Date',
+    'actions' => 'Actions',
+    'delivery' => 'Delivery',
+    'change_delivery_user' => 'Change Delivery User',
+    'assign_delivery_user' => 'Assign Delivery User',
+    'select_delivery_user' => 'Select Delivery User',
+    'close' => 'Close',
+    'take_order' => 'Take Order',
+    'you_claimed_this_order' => 'You claimed this order',
+    'order_taken_by_another' => 'Order taken by another user',
+    'no_delivery' => 'No Delivery',
+];

@@ -1,0 +1,2 @@
+<img src="/public/assets/yumiis-logo.png" alt="Yumiis Logo" width="380" height="380" />
+<?php /**PATH /home/u397680723/domains/soltriks.com/public_html/apiyumiis/resources/views/components/authentication-card-logo.blade.php ENDPATH**/ ?>
