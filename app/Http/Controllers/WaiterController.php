@@ -15,7 +15,7 @@ class WaiterController extends Controller
     public function index()
     {
         $waiters = Waiter::paginate(10); // Fetch waiters
-        return view('users.index', compact('waiters'));
+        return view('waiters.index', compact('waiters'));
     }
 
     /**

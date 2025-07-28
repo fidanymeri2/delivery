@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckRequestOrigin;
 use App\Http\Middleware\AdminRole;
 use App\Http\Middleware\CheckIfBanned;
+use App\Http\Middleware\SetLocale;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
     
         $middleware->alias([
             'admin' => AdminRole::class,
-            'banned' => CheckIfBanned::class
+            'banned' => CheckIfBanned::class,
+            'setlocale' => SetLocale::class
         ]);
 
 

@@ -9,9 +9,23 @@ use App\Models\ExtraCategory;
 use App\Models\ExtraProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\TableCategory;
+use App\Models\RestaurantTable;
+use App\Models\TableOrder;
+use App\Models\Waiter;
+use App\Models\StockTransaction;
+use App\Models\StockAlert;
+use App\Services\StockManagementService;
 
 class DashboardController extends Controller
 {
+    protected $stockService;
+
+    public function __construct(StockManagementService $stockService)
+    {
+        $this->stockService = $stockService;
+    }
+
     public function index()
     {
         $totalProducts = Product::count();
@@ -20,6 +34,15 @@ class DashboardController extends Controller
         $totalExtrasCategory = ExtraCategory::count();
         $totalExtrasProduct = ExtraProduct::count();
         $totalOrders = Order::count();
+        
+        // Table management statistics
+        $totalTableCategories = TableCategory::count();
+        $totalRestaurantTables = RestaurantTable::count();
+        $totalTableOrders = TableOrder::count();
+        $activeTableOrders = TableOrder::where('status', 'open')->count();
+        
+        // Waiter statistics
+        $totalWaiters = Waiter::count();
 
         // Fetch the top 5 best-selling products
         $topSellingProducts = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
@@ -53,6 +76,20 @@ class DashboardController extends Controller
             ->pluck('count', 'status')
             ->toArray();
 
+        // Stock Management Statistics
+        $stockSummary = $this->stockService->getStockSummary();
+        $lowStockProducts = $this->stockService->getLowStockProducts()->take(5);
+        $outOfStockProducts = $this->stockService->getOutOfStockProducts()->take(5);
+        $recentStockTransactions = StockTransaction::with(['product', 'user'])
+            ->latest()
+            ->take(5)
+            ->get();
+        $activeStockAlerts = StockAlert::with(['product'])
+            ->where('status', 'active')
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('dashboard', compact(
             'totalProducts',
             'totalExtrasCategory',
@@ -60,9 +97,19 @@ class DashboardController extends Controller
             'totalCategories',
             'totalUsers',
             'totalOrders',
+            'totalTableCategories',
+            'totalRestaurantTables',
+            'totalTableOrders',
+            'activeTableOrders',
+            'totalWaiters',
             'topSellingProducts',
             'shippingStatusStats',
-            'paymentStatusStats'
+            'paymentStatusStats',
+            'stockSummary',
+            'lowStockProducts',
+            'outOfStockProducts',
+            'recentStockTransactions',
+            'activeStockAlerts'
         ));
     }
 }

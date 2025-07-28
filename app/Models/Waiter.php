@@ -18,4 +18,15 @@ class Waiter extends Model
         'name',
         'pin_code',
     ];
+
+    public function tableOrders()
+    {
+        return $this->hasMany(TableOrder::class, 'waiter_id');
+    }
+
+    public function activeOrders()
+    {
+        return $this->hasMany(TableOrder::class, 'waiter_id')
+                    ->where('status', 'open');
+    }
 }

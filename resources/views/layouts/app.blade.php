@@ -11,93 +11,8 @@
     <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
     <!-- Scripts -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-0zNOfxlS.css') }}" data-navigate-track="reload" />
-    <script type="module" src="{{ asset('build/assets/app-C1-XIpUa.js') }}" data-navigate-track="reload"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    <style>
-    .burger-menu {
-        display: none;
-        cursor: pointer;
-    }
-    .sidebar {
-    position: fixed;
-    top: 70px; 
-    left: 10px;
-    background: #2e4ead;
-    width: 200px;
-    height: calc(100vh - 70px); 
-    
-    border-bottom-left-radius: 20px;
-    transition: all 0.3s ease;
-    overflow-y: auto; 
-    display: flex;
-    flex-direction: column;
-}
-.sidebar::-webkit-scrollbar {
-    width: 12px; 
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: #2e4ead; 
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: #1e40af; 
-    border-radius: 10px; 
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: #1a3a8f; 
-}
-
-
-.sidebar ul {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
-
-.sidebar ul li a {
-    display: block;
-    padding: 20px;
-    position: relative;
-    margin-bottom: 1px;
-    color: #92a6e2;
-    white-space: nowrap;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    text-decoration: none; 
-}
-    
-
-    @media (max-width: 768px) {
-        .burger-menu {
-            display: block;
-            padding: 10px;
-            font-size: 1.5rem;
-        }
-
-        .sidebar {
-            position: fixed; 
-            top: 60px; 
-            left: 0;
-            width: 200px; 
-            height: calc(100% - 60px); 
-            background: #fff;
-            z-index: 1000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none; 
-        }
-
-        .sidebar.active {
-            display: block;
-        }
-
-        .main_container.full-width {
-            width: 100%;
-            margin-left: 0;
-        }
-    }
-</style>
 
 </head>
 <body class="font-sans antialiased">
@@ -162,6 +77,12 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('stock-management.index') }}" class="no-underline {{ Route::currentRouteName() == 'stock-management.index' ? 'active' : '' }}">
+                <span class="icon"><i class="fas fa-boxes"></i></span>
+                <span class="title">Stock Management</span>
+            </a>
+        </li>
+        <li>
             <a href="{{ route('orders.new') }}" class="no-underline {{ Route::currentRouteName() == 'orders.new' ? 'active' : '' }}">
                 <span class="icon"><i class="fas fa-bell"></i></span>
                 <span class="title">New Orders</span>
@@ -177,6 +98,30 @@
             <a href="{{ route('reservations.index') }}" class="no-underline {{ Route::currentRouteName() == 'reservations.index' ? 'active' : '' }}">
                 <span class="icon"><i class="fas fa-calendar"></i></span>
                 <span class="title">Reservations</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('table-categories.index') }}" class="no-underline {{ Route::currentRouteName() == 'table-categories.index' ? 'active' : '' }}">
+                <span class="icon"><i class="fas fa-layer-group"></i></span>
+                <span class="title">Table Categories</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('restaurant-tables.index') }}" class="no-underline {{ Route::currentRouteName() == 'restaurant-tables.index' ? 'active' : '' }}">
+                <span class="icon"><i class="fas fa-table"></i></span>
+                <span class="title">Restaurant Tables</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('table-orders.index') }}" class="no-underline {{ Route::currentRouteName() == 'table-orders.index' ? 'active' : '' }}">
+                <span class="icon"><i class="fas fa-utensils"></i></span>
+                <span class="title">Table Orders</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('pos.index') }}" class="no-underline {{ Route::currentRouteName() == 'pos.index' ? 'active' : '' }}">
+                <span class="icon"><i class="fas fa-cash-register"></i></span>
+                <span class="title">POS System</span>
             </a>
         </li>
         <li>
@@ -203,7 +148,7 @@
                 </button>
             </form>
         </div>
-        <div class="main_container full-width" id="main-container">
+        <div class="main_container" id="main-container">
             {{ $slot }}
         </div>
     </div>

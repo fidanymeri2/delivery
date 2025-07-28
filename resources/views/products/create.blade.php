@@ -202,21 +202,21 @@
                 </div>
 
                 <div>
-                    <label for="name">Name:</label>
+                    <label for="name">{{ __('product.name') }}:</label>
                     <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="name" id="name" required>
                 </div>
 
                 <div class="full-width">
-                    <label for="description">Description:</label>
+                    <label for="description">{{ __('product.description') }}:</label>
                     <textarea class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="description" id="description"></textarea>
                 </div>
                 <div>
-                    <label for="allergies">Allergies:</label>
+                    <label for="allergies">{{ __('product.allergies') }}:</label>
                     <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="allergies" id="allergies" required>
                 </div>
 
                 <div>
-    <label for="image">Image:</label>
+    <label for="image">{{ __('product.upload_image') }}:</label>
     <input type="file" name="image" id="image">
 </div>
 
@@ -224,7 +224,7 @@
     <div class="checkbox-wrapper">
         <input type="hidden" name="new_product" value="0">
         <input type="checkbox" name="new_product" id="new_product" value="1">
-        <label for="new_product">New Product</label>
+        <label for="new_product">{{ __('product.new_product') }}</label>
     </div>
 </div>
 
@@ -232,7 +232,7 @@
     <div class="checkbox-wrapper">
         <input type="hidden" name="new_offers" value="0">
         <input type="checkbox" name="new_offers" id="new_offers" value="1">
-        <label for="new_offers">New Offers</label>
+        <label for="new_offers">{{ __('product.new_offers') }}</label>
     </div>
 </div>
 
@@ -240,7 +240,77 @@
     <div class="checkbox-wrapper">
         <input type="hidden" name="suggested" value="0">
         <input type="checkbox" name="suggested" id="suggested" value="1">
-        <label for="suggested">Suggested</label>
+        <label for="suggested">{{ __('product.suggested') }}</label>
+    </div>
+</div>
+
+<!-- Stock Management Section -->
+<div class="full-width">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4 mt-6">{{ __('product.stock_management') }}</h3>
+    
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <div class="checkbox-wrapper">
+                <input type="hidden" name="requires_stock" value="0">
+                <input type="checkbox" name="requires_stock" id="requires_stock" value="1">
+                <label for="requires_stock">{{ __('product.requires_stock_tracking') }}</label>
+            </div>
+        </div>
+        
+        <div>
+            <div class="checkbox-wrapper">
+                <input type="hidden" name="low_stock_alert" value="0">
+                <input type="checkbox" name="low_stock_alert" id="low_stock_alert" value="1">
+                <label for="low_stock_alert">{{ __('product.enable_low_stock_alerts') }}</label>
+            </div>
+        </div>
+    </div>
+    
+    <div id="stock-fields" class="grid grid-cols-2 gap-4 mt-4" style="display: none;">
+        <div>
+            <label for="current_stock">{{ __('product.current_stock') }}:</label>
+            <input type="number" name="current_stock" id="current_stock" min="0" value="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        
+        <div>
+            <label for="stock_unit">{{ __('product.stock_unit') }}:</label>
+            <select name="stock_unit" id="stock_unit" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <optgroup label="Sasi (copë)">
+                    <option value="copë">copë</option>
+                    <option value="porcion">porcion</option>
+                    <option value="artikull">artikull</option>
+                </optgroup>
+                <optgroup label="Peshë (masa)">
+                    <option value="gram">gram (g)</option>
+                    <option value="kilogram">kilogram (kg)</option>
+                </optgroup>
+                <optgroup label="Vëllim (lëngje)">
+                    <option value="litër">litër (L)</option>
+                    <option value="mililitër">mililitër (ml)</option>
+                    <option value="decilitër">decilitër (dl)</option>
+                </optgroup>
+                <optgroup label="Njësi pakete">
+                    <option value="shishe">shishe</option>
+                    <option value="kuti">kuti</option>
+                    <option value="thes">thes</option>
+                </optgroup>
+                <optgroup label="Njësi konsumi">
+                    <option value="lugë">lugë</option>
+                    <option value="filxhan">filxhan</option>
+                    <option value="gotë">gotë</option>
+                </optgroup>
+            </select>
+        </div>
+        
+        <div>
+            <label for="min_stock_level">{{ __('product.min_stock_level') }}:</label>
+            <input type="number" name="min_stock_level" id="min_stock_level" min="0" value="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        
+        <div>
+            <label for="max_stock_level">{{ __('product.max_stock_level') }} ({{ __('product.optional') }}):</label>
+            <input type="number" name="max_stock_level" id="max_stock_level" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
     </div>
 </div>
 
@@ -249,11 +319,11 @@
             <div id="sizes-container" class="mt-4">
     <div class="grid grid-cols-2 gap-4 size-entry" data-index="0">
         <div>
-            <label for="price-0" class="block">Price:</label>
+            <label for="price-0" class="block">{{ __('product.price') }}:</label>
             <input type="number" name="sizes[0][price]" step="any" id="price-0" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
         </div>
         <div>
-            <label for="dimensions-0" class="block">Description:</label>
+            <label for="dimensions-0" class="block">{{ __('product.description') }}:</label>
 <select  name="sizes[0][dimensions]" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
     @foreach($desc as $de)
 <option value="{{ $de->id }}">{{ $de->name }}</option>
@@ -264,12 +334,12 @@
 </div>
 
 
-            <button type="button" id="add-size-button">Add Another Size</button> <br>
+            <button type="button" id="add-size-button">{{ __('product.add_size') }}</button> <br>
 
        
 
 
-            <button type="submit">Create Product</button>
+            <button type="submit">{{ __('product.create_product') }}</button>
         </form>
 
 <script>
@@ -289,11 +359,11 @@
 
                 newSizeEntry.innerHTML = `
                     <div>
-                        <label for="price-${index}" class="block">Price:</label>
+                        <label for="price-${index}" class="block">{{ __('product.price') }}:</label>
                         <input type="number" name="sizes[${index}][price]" step="any" id="price-${index}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div>
-                        <label for="dimensions-${index}" class="block">Description </label>
+                        <label for="dimensions-${index}" class="block">{{ __('product.description') }}</label>
                             <select name="sizes[${index}][dimensions]" id="dimensions-${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 ${options}
                             </select>
@@ -319,6 +389,20 @@
             });
         });
     });
+    
+    // Stock management toggle
+    const requiresStockCheckbox = document.getElementById('requires_stock');
+    const stockFields = document.getElementById('stock-fields');
+    
+    if (requiresStockCheckbox && stockFields) {
+        requiresStockCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                stockFields.style.display = 'grid';
+            } else {
+                stockFields.style.display = 'none';
+            }
+        });
+    }
 });
 
 
@@ -334,7 +418,7 @@
         // Check file size (not more than 1MB)
         const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
         if (file.size > maxSizeInBytes) {
-            alert('The uploaded image must not exceed 1MB.');
+            alert('{{ __('product.image_size_error') }}');
             event.target.value = ''; // Reset the file input
             return;
         }
@@ -345,7 +429,7 @@
 
             // Check for specific resolution range
             if (width < 800 || width > 1000 || height < 800 || height > 1000) {
-                alert('The image resolution must be between 800x800 and 1000x1000 pixels.');
+                alert('{{ __('product.image_resolution_error') }}');
                 event.target.value = ''; // Reset the file input
             }
         };

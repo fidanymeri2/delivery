@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemOption;
+use App\Models\Product;
 use App\Models\Waiter;
 use App\Models\User;
 use App\Models\OrderStatusHistory;
@@ -13,9 +14,18 @@ use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Services\StockManagementService;
+use Illuminate\Support\Facades\DB;
 
 class OrdersController extends Controller
 {
+    protected $stockService;
+
+    public function __construct(StockManagementService $stockService)
+    {
+        $this->stockService = $stockService;
+    }
+
     public function index(Request $request)
     {
         $status = $request->input('status');
@@ -44,82 +54,145 @@ class OrdersController extends Controller
     
     
     public function submit(Request $request)
-{
-    
-$waiterId= $request->waiterId;
-    
-if($waiterId != 1)
-{
-$waiter = Waiter::where('pin_code',$waiterId)->first();
-$waiterId = 1;
-if($waiter)
-{$waiterId = $waiter->id; }else{
-return  response()->json(["IsWaiter"=>true]);
-}
-    
-    
-}
-    
-       $order  = Order::create([
-            "firstName"    => $request->firstName,
-            "lastName"    => $request->lastName,
-            "waiterId"    => $waiterId,
-            "order_code" => $this->generateShortCode(),
-"tip" => $request->paymentTip ? $request->paymentTip : 0,
-            "phone_number" => $request->contactNumber,
-            "location" => $request->location,
-            "postal_code" => $request->shippingFee,
-            "email" => $request->email,
-            "description" => $request->description,
-            "status_of_payment" => $request->paymentMethod,
-            "paypal_id" => $request->paypalId,
-            "status" => $request->paymentMethod == 'bank' ? 'paid' : 'unpaid'
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'contactNumber' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'shippingFee' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'description' => 'nullable|string',
+            'paymentMethod' => 'required|string|in:bank,cash,pickup',
+            'paymentTip' => 'nullable|numeric|min:0',
+            'paypalId' => 'nullable|string|max:255',
+            'cart' => 'required|array|min:1',
+            'cart.*.product_id' => 'required|integer|exists:products,id',
+            'cart.*.product_info.qty' => 'required|integer|min:1',
         ]);
-        
-        foreach($request->cart as $cart)
-        {
-            $cart = (object) $cart;
-            $product_info = (object) $cart->product_info;
-    
-            $item = OrderItem::create([
-                "order_id" => $order->id,
-                "product_id" => $cart->product_id,
-                "selectedLabel" => isset($product_info->selectedLabel) ? $product_info->selectedLabel : null,
-                "special_instruction" => $product_info->special_instructions ?? null,
-                "menu" =>  isset($product_info->menu) ? json_encode($product_info->menu) : null,
-                "optionals" => isset($product_info->optionOptionals)  ? json_encode($product_info->optionOptionals) : null,
-                "price_sell" => $product_info->price,
-                "quantity" => $product_info->qty,
-            ]);
-            $options = collect($product_info->options)
-                ->map(function ($item) {
-                $filteredSubItems = collect($item['items'])->filter(function ($subItem) {
-            return isset($subItem['checked']) && $subItem['checked'] === true;
-                });
-            $item['items'] = $filteredSubItems->values();
-            return $item;
-            })
-            ->filter(function ($item) {
-            return $item['items']->isNotEmpty();
-            });
-            foreach($options as $option)
-            {
 
-                foreach($option['items'] as $itemoption)
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Validate stock availability before processing
+            $stockErrors = [];
+            foreach ($request->cart as $cart) {
+                $cart = (object) $cart;
+                $product_info = (object) $cart->product_info;
+                $product = Product::find($cart->product_id);
+                
+                if ($product && $product->requires_stock) {
+                    if (!$product->canSell($product_info->qty)) {
+                        $stockErrors[] = "Insufficient stock for {$product->name}. Available: {$product->current_stock} {$product->stock_unit}";
+                    }
+                }
+            }
+
+            if (!empty($stockErrors)) {
+                return response()->json([
+                    'IsSuccess' => false,
+                    'message' => 'Stock validation failed',
+                    'errors' => $stockErrors
+                ], 400);
+            }
+
+            $waiterId = $request->waiterId;
+            
+            if($waiterId != 1)
+            {
+                $waiter = Waiter::where('pin_code',$waiterId)->first();
+                $waiterId = 1;
+                if($waiter)
                 {
-                $itemoption = (object)$itemoption;
-                $option = OrderItemOption::create([
-                "order_item_id" => $item->id,
-                "option_id" => $itemoption->id,
-                "price_sell" => $itemoption->price,
-                "quantity" => $itemoption->qty,
-                ]);
+                    $waiterId = $waiter->id; 
+                } else {
+                    return response()->json(["IsWaiter"=>true]);
                 }
             }
             
-        }
+            $order = Order::create([
+                "firstName"    => $request->firstName,
+                "lastName"    => $request->lastName,
+                "waiterId"    => $waiterId,
+                "order_code" => $this->generateShortCode(),
+                "tip" => $request->paymentTip ? $request->paymentTip : 0,
+                "phone_number" => $request->contactNumber,
+                "location" => $request->location,
+                "postal_code" => $request->shippingFee,
+                "email" => $request->email,
+                "description" => $request->description,
+                "status_of_payment" => $request->paymentMethod,
+                "paypal_id" => $request->paypalId,
+                "status" => $request->paymentMethod == 'bank' ? 'paid' : 'unpaid'
+            ]);
+            
+            foreach($request->cart as $cart)
+            {
+                $cart = (object) $cart;
+                $product_info = (object) $cart->product_info;
+                $product = Product::find($cart->product_id);
         
-        return response()->json(["IsSuccess"=>true]);
+                $item = OrderItem::create([
+                    "order_id" => $order->id,
+                    "product_id" => $cart->product_id,
+                    "selectedLabel" => isset($product_info->selectedLabel) ? $product_info->selectedLabel : null,
+                    "special_instruction" => $product_info->special_instructions ?? null,
+                    "menu" =>  isset($product_info->menu) ? json_encode($product_info->menu) : null,
+                    "optionals" => isset($product_info->optionOptionals)  ? json_encode($product_info->optionOptionals) : null,
+                    "price_sell" => $product_info->price,
+                    "quantity" => $product_info->qty,
+                ]);
+
+                // Deduct stock if product requires stock tracking
+                if ($product && $product->requires_stock) {
+                    $this->stockService->removeStock($product, $product_info->qty, [
+                        'order_id' => $order->id,
+                        'notes' => "Delivery Order #{$order->id} - {$product->name}"
+                    ]);
+                }
+
+                $options = collect($product_info->options)
+                    ->map(function ($item) {
+                    $filteredSubItems = collect($item['items'])->filter(function ($subItem) {
+                return isset($subItem['checked']) && $subItem['checked'] === true;
+                    });
+                $item['items'] = $filteredSubItems->values();
+                return $item;
+                })
+                ->filter(function ($item) {
+                return $item['items']->isNotEmpty();
+                });
+                foreach($options as $option)
+                {
+
+                    foreach($option['items'] as $itemoption)
+                    {
+                    $itemoption = (object)$itemoption;
+                    $option = OrderItemOption::create([
+                    "order_item_id" => $item->id,
+                    "option_id" => $itemoption->id,
+                    "price_sell" => $itemoption->price,
+                    "quantity" => $itemoption->qty,
+                    ]);
+                    }
+                }
+                
+            }
+            
+            DB::commit();
+            return response()->json(["IsSuccess"=>true]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'IsSuccess' => false,
+                'message' => 'Failed to process order: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)

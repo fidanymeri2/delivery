@@ -67,7 +67,7 @@
     <a href="{{ route('products.stats') }}" class="no-underline {{ Route::currentRouteName() == 'products.stats' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-chart-line"></i></span>
-                <div class="card-header">Stats</div>
+                <div class="card-header">{{ __('settings.stats') }}</div>
             </div>
         </a>
 
@@ -75,50 +75,76 @@
         <a href="{{ route('messages.index') }}" class="no-underline {{ Route::currentRouteName() == 'messages.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="far fa-comment-alt"></i></span>
-                <div class="card-header">Messages</div>
+                <div class="card-header">{{ __('settings.messages') }}</div>
             </div>
         </a>
 
         <a href="{{ route('documents.index') }}" class="no-underline {{ Route::currentRouteName() == 'documents.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-file-alt"></i></span>
-                <div class="card-header">Documents</div>
+                <div class="card-header">{{ __('settings.documents') }}</div>
             </div>
         </a>
 
         <a href="{{ route('users.index') }}" class="no-underline {{ Route::currentRouteName() == 'users.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-users"></i></span>
-                <div class="card-header">Users</div>
+                <div class="card-header">{{ __('settings.users') }}</div>
             </div>
         </a>
 
         <a href="{{ route('partners.index') }}" class="no-underline {{ Route::currentRouteName() == 'partners.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-handshake"></i></span>
-                <div class="card-header">Partners</div>
+                <div class="card-header">{{ __('settings.partners') }}</div>
             </div>
         </a>
 
         <a href="{{ route('shipping-fees.index') }}" class="no-underline {{ Route::currentRouteName() == 'shipping-fees.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-truck"></i></span>
-                <div class="card-header">Shipping Fees</div>
+                <div class="card-header">{{ __('settings.shipping_fees') }}</div>
             </div>
         </a>
 
         <a href="{{ route('banners.index') }}" class="no-underline {{ Route::currentRouteName() == 'banners.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-ad"></i></span>
-                <div class="card-header">Banners</div>
+                <div class="card-header">{{ __('settings.banners') }}</div>
             </div>
         </a>
 
         <a href="{{ route('feedbacks.index') }}" class="no-underline {{ Route::currentRouteName() == 'feedbacks.index' ? 'active' : '' }}">
             <div class="card">
                 <span class="icons"><i class="fas fa-star"></i></span>
-                <div class="card-header">Feedbacks</div>
+                <div class="card-header">{{ __('settings.feedbacks') }}</div>
             </div>
         </a>
+
+        <!-- Language Selection Card -->
+        <div class="card">
+            <span class="icons"><i class="fas fa-globe"></i></span>
+            <div class="card-header">{{ __('settings.language') }}</div>
+            <form action="{{ route('settings.update-language') }}" method="POST" class="mt-3">
+                @csrf
+                <div class="flex flex-col space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="language" value="en" {{ auth()->user()->language == 'en' ? 'checked' : '' }} class="mr-2">
+                        <span>{{ __('settings.english') }}</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="language" value="sq" {{ auth()->user()->language == 'sq' ? 'checked' : '' }} class="mr-2">
+                        <span>{{ __('settings.albanian') }}</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-full">{{ __('settings.save_changes') }}</button>
+            </form>
+        </div>
     </div>
+
+    @if(session('success'))
+        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+            {{ session('success') }}
+        </div>
+    @endif
 </x-app-layout>

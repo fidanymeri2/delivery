@@ -136,15 +136,15 @@
             @endif
             <div class="product-details">
                 <h1>{{ $product->name }}</h1>
-                <p><strong>Category:</strong> {{ $product->category->name }}</p>
-                <p><strong>Description:</strong> {{ $product->description }}</p>
-                <p><strong>New Product:</strong> {{ $product->new_product ? 'Yes' : 'No' }}</p>
-                <p><strong>New Offers:</strong> {{ $product->new_offers ? 'Yes' : 'No' }}</p>
-                <p><strong>Suggested:</strong>  {{ $product->suggested ? 'Yes' : 'No' }} </p>
+                <p><strong>{{ __('product.category') }}:</strong> {{ $product->category->name }}</p>
+                <p><strong>{{ __('product.description') }}:</strong> {{ $product->description }}</p>
+                <p><strong>{{ __('product.new_product') }}:</strong> {{ $product->new_product ? __('product.yes') : __('product.no') }}</p>
+                <p><strong>{{ __('product.new_offers') }}:</strong> {{ $product->new_offers ? __('product.yes') : __('product.no') }}</p>
+                <p><strong>{{ __('product.suggested') }}:</strong>  {{ $product->suggested ? __('product.yes') : __('product.no') }} </p>
             </div>
         </div>
 
     
-        <a href="{{ route('products.index') }}" class="back-button">Back to Products</a>
+        <a href="{{ route('products.index') }}" class="back-button">{{ __('product.back_to_products') }}</a>
     </div>
 </x-app-layout>

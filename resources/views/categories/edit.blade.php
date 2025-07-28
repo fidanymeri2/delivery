@@ -102,18 +102,18 @@
 
     <div class="max-w-4xl mx-auto p-6">
         <div class="breadcrumb">
-            <a href="{{ route('categories.index') }}">Categories</a>
+            <a href="{{ route('categories.index') }}">{{ __('category.categories') }}</a>
             <span class="separator">/</span>
-            <span>Edit Category</span>
+            <span>{{ __('category.edit_category') }}</span>
         </div>
 
         <div class="container">
-            <h1>Edit Category</h1>
+            <h1>{{ __('category.edit_category') }}</h1>
             <form action="{{ route('categories.update', $category->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="name">Name:</label>
+                    <label for="name">{{ __('category.category_name') }}:</label>
                     <input type="text" name="name" id="name" value="{{ $category->name }}" required>
                     @error('name')
                         <div class="error">{{ $message }}</div>
@@ -121,11 +121,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description:</label>
+                    <label for="description">{{ __('category.category_description') }}:</label>
                     <textarea name="description" id="description">{{ $category->description }}</textarea>
                 </div>
 
-                <button type="submit">Update Category</button>
+                <button type="submit">{{ __('category.update_category') }}</button>
             </form>
         </div>
     </div>

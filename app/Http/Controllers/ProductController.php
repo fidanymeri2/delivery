@@ -14,6 +14,7 @@ use App\Models\MenuItem;
 use App\Models\MenuPrice;
 use App\Models\DescriptionCategory;
 use App\Models\ProductOptionOptional;
+use App\Services\StockManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 class ProductController extends Controller
 {
+    protected $stockService;
+
+    public function __construct(StockManagementService $stockService)
+    {
+        $this->stockService = $stockService;
+    }
+
     public function index(Request $request)
     {
         $perPage = 10;
@@ -191,7 +199,13 @@ $categories = Category::all(); $desc = DescriptionCategory::where("isActive",0)-
             'sizes.*.dimensions' => 'nullable|numeric|min:0',
             'extra_products' => 'array',
             'extra_products.*' => 'exists:extra_products,id',
-            
+            // Stock management fields
+            'requires_stock' => 'nullable|boolean',
+            'current_stock' => 'nullable|integer|min:0',
+            'min_stock_level' => 'nullable|integer|min:0',
+            'max_stock_level' => 'nullable|integer|min:0',
+            'stock_unit' => 'nullable|string|max:50',
+            'low_stock_alert' => 'nullable|boolean',
         ]);
     
         // Handle image upload and validate resolution
@@ -219,6 +233,13 @@ $categories = Category::all(); $desc = DescriptionCategory::where("isActive",0)-
             'new_product' => (bool) $request->input('new_product', false),
             'new_offers' => (bool) $request->input('new_offers', false),
             'suggested' => (bool) $request->input('suggested', false),
+            // Stock management fields
+            'requires_stock' => (bool) $request->input('requires_stock', false),
+            'current_stock' => $request->input('current_stock', 0),
+            'min_stock_level' => $request->input('min_stock_level', 0),
+            'max_stock_level' => $request->input('max_stock_level'),
+            'stock_unit' => $request->input('stock_unit', 'pieces'),
+            'low_stock_alert' => (bool) $request->input('low_stock_alert', false),
         ]);
     
         // Log product creation
@@ -350,14 +371,24 @@ $this->options($request->options,$product->id,$request->deleted_options);
         }
     }
 
-    // Handle extra products
-    if ($request->has('extra_products')) {
-        $product->extraProducts()->sync($request->input('extra_products'));
-    } else {
-        $product->extraProducts()->sync([]); // Clear extra products if none are selected
-    }
+            // Handle extra products
+        if ($request->has('extra_products')) {
+            $product->extraProducts()->sync($request->input('extra_products'));
+        } else {
+            $product->extraProducts()->sync([]); // Clear extra products if none are selected
+        }
 
-    return redirect()->back()->with('success', 'Product updated successfully.');
+        // Handle stock management fields
+        $product->update([
+            'requires_stock' => (bool) $request->input('requires_stock', false),
+            'current_stock' => $request->input('current_stock', 0),
+            'min_stock_level' => $request->input('min_stock_level', 0),
+            'max_stock_level' => $request->input('max_stock_level'),
+            'stock_unit' => $request->input('stock_unit', 'pieces'),
+            'low_stock_alert' => (bool) $request->input('low_stock_alert', false),
+        ]);
+
+        return redirect()->back()->with('success', 'Product updated successfully.');
 }
 public function options($options,$productId,$deleted_options)
 {

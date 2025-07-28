@@ -20,6 +20,7 @@ class User extends Authenticatable
         'password',
         'banned',
         'role',  // Make sure this field exists in your database
+        'language',
     ];
 
     protected $hidden = [

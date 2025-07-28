@@ -196,7 +196,7 @@
 
 <div class="container">
     <x-button>
-        <a href="{{ route('products.create') }}" class="text-white no-underline hover:no-underline">Create New Product</a>
+        <a href="{{ route('products.create') }}" class="text-white no-underline hover:no-underline">{{ __('product.create_new_product') }}</a>
     </x-button>
 
     @if (session('success'))
@@ -217,24 +217,24 @@
         </select>
     </form> -->
     <form action="{{ route('products.index') }}" class="mt-6" method="GET">
-    <input type="text" name="product_name" value="{{ request('product_name') }}" class="filter-select w-fit" placeholder="Search Product">
+    <input type="text" name="product_name" value="{{ request('product_name') }}" class="filter-select w-fit" placeholder="{{ __('product.search_product') }}">
     <select name="category_id" class="filter-select">
-        <option value="">All Categories</option>
+        <option value="">{{ __('product.all_categories') }}</option>
         @foreach ($categories as $category)
             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                 {{ $category->name }}
             </option>
         @endforeach
     </select>
-    <button type="submit" class="btn btn-info">Search</button>
-    <a href="{{ route('products.index') }}" class="btn btn-reset">Reset</a>
+    <button type="submit" class="btn btn-info">{{ __('product.search') }}</button>
+    <a href="{{ route('products.index') }}" class="btn btn-reset">{{ __('product.reset') }}</a>
 </form>
     <table id="product-table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Actions</th>
+                <th>{{ __('product.name') }}</th>
+                <th>{{ __('product.category') }}</th>
+                <th>{{ __('product.actions') }}</th>
             </tr>
         </thead>
         <tbody id="sortable">
@@ -243,12 +243,12 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category->name }}</td>
                     <td class="actions">
-                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info">{{ __('product.view') }}</a>
+                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">{{ __('product.edit') }}</a>
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('product.are_you_sure') }}')">{{ __('product.delete') }}</button>
                         </form>
                     </td>
                 </tr>
@@ -277,11 +277,11 @@
                 },
                 success: function(response) {
                     console.log('Order updated successfully:', response);
-                    alert('Order updated successfully!');
+                    alert('{{ __('product.order_updated_successfully') }}');
                 },
                 error: function(xhr, status, error) {
                     console.error('An error occurred:', xhr.responseText);
-                    alert('Failed to update order. Error: ' + xhr.responseText);
+                    alert('{{ __('product.failed_to_update_order') }}' + xhr.responseText);
                 }
             });
         }

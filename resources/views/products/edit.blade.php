@@ -207,7 +207,7 @@ $checkIfHasMenu  = \App\Models\Menu::where('product_id',$product->id)->first();
 
 @endphp
 <div class="form-container">
-<h1>Edit Product  @if($checkIfHasMenu) <button type="button"><a href="{{ route('menu.edit',$checkIfHasMenu->id) }}">View Menu</a></button>  @else <button type="button"><a href="{{ route('menu.create',$product->id) }}">Create Menu</a></button> @endif</h1>
+<h1>{{ __('product.edit_product') }}  @if($checkIfHasMenu) <button type="button"><a href="{{ route('menu.edit',$checkIfHasMenu->id) }}">{{ __('product.view_menu') }}</a></button>  @else <button type="button"><a href="{{ route('menu.create',$product->id) }}">{{ __('product.create_menu') }}</a></button> @endif</h1>
 
 
 
@@ -217,7 +217,7 @@ $checkIfHasMenu  = \App\Models\Menu::where('product_id',$product->id)->first();
 
     <div class="form-grid">
         <div>
-            <label for="category_id">Category:</label>
+            <label for="category_id">{{ __('product.category') }}:</label>
             <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="category_id" id="category_id" required>
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
@@ -228,71 +228,137 @@ $checkIfHasMenu  = \App\Models\Menu::where('product_id',$product->id)->first();
         </div>
 
         <div>
-            <label for="name">Name:</label>
+            <label for="name">{{ __('product.name') }}:</label>
             <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="name" id="name" value="{{ old('name', $product->name) }}" required>
         </div>
   <div>
-            <label for="allergies">Allergies:</label>
+            <label for="allergies">{{ __('product.allergies') }}:</label>
             <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="allergies" id="allergies" value="{{ old('allergies', $product->allergies) }}" >
 </div>
   <div>
-            <label for="product_code">Product Code:</label>
+            <label for="product_code">{{ __('product.product_code') }}:</label>
             <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="product_code" id="product_code" value="{{ old('product_code', $product->product_code) }}" required>
         </div>
         
         <div class="full-width">
-            <label for="description">Description:</label>
+            <label for="description">{{ __('product.description') }}:</label>
             <textarea class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="description" id="description">{{ old('description', $product->description) }}</textarea>
         </div>
 
         <div>
-            <label for="image">Current Image:</label>
+            <label for="image">{{ __('product.current_image') }}:</label>
             @if($product->image)
-                <img src="{{ asset($product->image) }}" alt="Current Image" style="max-width: 100%; height: auto; margin-bottom: 1rem;">
+                <img src="{{ asset($product->image) }}" alt="{{ __('product.current_image') }}" style="max-width: 100%; height: auto; margin-bottom: 1rem;">
             @endif
-            <label for="image">Replace Image:</label>
+            <label for="image">{{ __('product.replace_image') }}:</label>
             <input type="file" name="image" id="image">
         </div>
 
         <div class="full-width">
     <div class="checkbox-wrapper">
         <input type="checkbox" name="new_product" id="new_product" value="1" {{ old('new_product', $product->new_product) ? 'checked' : '' }}>
-        <label for="new_product">New Product</label>
+        <label for="new_product">{{ __('product.new_product') }}</label>
     </div>
 </div>
 
 <div class="full-width">
     <div class="checkbox-wrapper">
         <input type="checkbox" name="new_offers" id="new_offers" value="1" {{ old('new_offers', $product->new_offers) ? 'checked' : '' }}>
-        <label for="new_offers">New Offers</label>
+        <label for="new_offers">{{ __('product.new_offers') }}</label>
     </div>
 </div>
 
 <div class="full-width">
     <div class="checkbox-wrapper">
         <input type="checkbox" name="suggested" id="suggested" value="1" {{ old('suggested', $product->suggested) ? 'checked' : '' }}>
-        <label for="suggested">Suggested</label>
+        <label for="suggested">{{ __('product.suggested') }}</label>
     </div>
 </div>
 
 <div class="full-width">
     <div class="checkbox-wrapper">
         <input type="checkbox" name="isMenu" id="isMenu" value="1" {{ old('isMenu', $product->isMenu) ? 'checked' : '' }}>
-        <label for="isMenu">Menu</label>
+        <label for="isMenu">{{ __('product.menu') }}</label>
     </div>
 </div>
 
 <div class="full-width">
     <div class="checkbox-wrapper">
         <input type="checkbox" name="status" id="status" value="1" {{ old('status', $product->status) ? 'checked' : '' }}>
-        <label for="status">Status</label>
+        <label for="status">{{ __('product.status') }}</label>
     </div>
     <div class="status-text" style="color: {{ $product->status == 1 ? 'green' : 'red' }};">
-        {{ $product->status == 1 ? 'Product is Active' : 'Product is Inactive' }}
+        {{ $product->status == 1 ? __('product.product_active') : __('product.product_inactive') }}
     </div>
 </div>
 
-
+<!-- Stock Management Section -->
+<div class="full-width">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4 mt-6">Stock Management</h3>
+    
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="requires_stock" id="requires_stock" value="1" {{ old('requires_stock', $product->requires_stock) ? 'checked' : '' }}>
+                <label for="requires_stock">Requires Stock Tracking</label>
+            </div>
+        </div>
+        
+        <div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="low_stock_alert" id="low_stock_alert" value="1" {{ old('low_stock_alert', $product->low_stock_alert) ? 'checked' : '' }}>
+                <label for="low_stock_alert">Enable Low Stock Alerts</label>
+            </div>
+        </div>
+    </div>
+    
+    <div id="stock-fields" class="grid grid-cols-2 gap-4 mt-4" style="display: {{ old('requires_stock', $product->requires_stock) ? 'grid' : 'none' }};">
+        <div>
+            <label for="current_stock">Current Stock:</label>
+            <input type="number" name="current_stock" id="current_stock" min="0" value="{{ old('current_stock', $product->current_stock ?? 0) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        
+        <div>
+            <label for="stock_unit">Stock Unit:</label>
+            <select name="stock_unit" id="stock_unit" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <optgroup label="Sasi (copë)">
+                    <option value="copë" {{ old('stock_unit', $product->stock_unit) == 'copë' ? 'selected' : '' }}>copë</option>
+                    <option value="porcion" {{ old('stock_unit', $product->stock_unit) == 'porcion' ? 'selected' : '' }}>porcion</option>
+                    <option value="artikull" {{ old('stock_unit', $product->stock_unit) == 'artikull' ? 'selected' : '' }}>artikull</option>
+                </optgroup>
+                <optgroup label="Peshë (masa)">
+                    <option value="gram" {{ old('stock_unit', $product->stock_unit) == 'gram' ? 'selected' : '' }}>gram (g)</option>
+                    <option value="kilogram" {{ old('stock_unit', $product->stock_unit) == 'kilogram' ? 'selected' : '' }}>kilogram (kg)</option>
+                </optgroup>
+                <optgroup label="Vëllim (lëngje)">
+                    <option value="litër" {{ old('stock_unit', $product->stock_unit) == 'litër' ? 'selected' : '' }}>litër (L)</option>
+                    <option value="mililitër" {{ old('stock_unit', $product->stock_unit) == 'mililitër' ? 'selected' : '' }}>mililitër (ml)</option>
+                    <option value="decilitër" {{ old('stock_unit', $product->stock_unit) == 'decilitër' ? 'selected' : '' }}>decilitër (dl)</option>
+                </optgroup>
+                <optgroup label="Njësi pakete">
+                    <option value="shishe" {{ old('stock_unit', $product->stock_unit) == 'shishe' ? 'selected' : '' }}>shishe</option>
+                    <option value="kuti" {{ old('stock_unit', $product->stock_unit) == 'kuti' ? 'selected' : '' }}>kuti</option>
+                    <option value="thes" {{ old('stock_unit', $product->stock_unit) == 'thes' ? 'selected' : '' }}>thes</option>
+                </optgroup>
+                <optgroup label="Njësi konsumi">
+                    <option value="lugë" {{ old('stock_unit', $product->stock_unit) == 'lugë' ? 'selected' : '' }}>lugë</option>
+                    <option value="filxhan" {{ old('stock_unit', $product->stock_unit) == 'filxhan' ? 'selected' : '' }}>filxhan</option>
+                    <option value="gotë" {{ old('stock_unit', $product->stock_unit) == 'gotë' ? 'selected' : '' }}>gotë</option>
+                </optgroup>
+            </select>
+        </div>
+        
+        <div>
+            <label for="min_stock_level">Minimum Stock Level:</label>
+            <input type="number" name="min_stock_level" id="min_stock_level" min="0" value="{{ old('min_stock_level', $product->min_stock_level ?? 0) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        
+        <div>
+            <label for="max_stock_level">Maximum Stock Level (Optional):</label>
+            <input type="number" name="max_stock_level" id="max_stock_level" min="0" value="{{ old('max_stock_level', $product->max_stock_level) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+    </div>
+</div>
 
 
 <input type="hidden" id="deleted-options" name="deleted_options" value="">
@@ -499,6 +565,20 @@ $(document).ready(function() {
             });
         });
     });
+    
+    // Stock management toggle
+    const requiresStockCheckbox = document.getElementById('requires_stock');
+    const stockFields = document.getElementById('stock-fields');
+    
+    if (requiresStockCheckbox && stockFields) {
+        requiresStockCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                stockFields.style.display = 'grid';
+            } else {
+                stockFields.style.display = 'none';
+            }
+        });
+    }
 });
 
         </script>

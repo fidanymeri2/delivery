@@ -154,7 +154,7 @@
 
     <div class="container">
         <x-button>
-            <a href="{{ route('categories.create') }}"class="text-white no-underline hover:no-underline">Create New Category</a>
+            <a href="{{ route('categories.create') }}"class="text-white no-underline hover:no-underline">{{ __('category.create_new_category') }}</a>
         </x-button>
 
         @if (session('success'))
@@ -167,9 +167,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="text-align: left;">Name</th>
-                        <th style="text-align: center;">Description</th>
-                        <th style="text-align: right;">Actions</th>
+                        <th style="text-align: left;">{{ __('category.name') }}</th>
+                        <th style="text-align: center;">{{ __('category.description') }}</th>
+                        <th style="text-align: right;">{{ __('category.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody id="sortable-categories">
@@ -178,12 +178,12 @@
             <td style="text-align: left;">{{ $category->name }}</td>
             <td style="text-align: center;">{{ Str::limit($category->description, 50) }}</td>
             <td class="actions">
-                <a href="{{ route('categories.show', $category->id) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                <a href="{{ route('categories.show', $category->id) }}" class="btn btn-info">{{ __('category.view') }}</a>
+                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary">{{ __('category.edit') }}</a>
                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('category.are_you_sure') }}')">{{ __('category.delete') }}</button>
                 </form>
             </td>
         </tr>
@@ -210,11 +210,11 @@ $(function() {
                 },
                 success: function(response) {
                     console.log('Order updated successfully:', response);
-                    alert('Order updated successfully!');
+                    alert('{{ __('category.order_updated_successfully') }}');
                 },
                 error: function(xhr, status, error) {
                     console.error('An error occurred:', xhr.responseText);
-                    alert('Failed to update order. Error: ' + xhr.responseText);
+                    alert('{{ __('category.failed_to_update_order') }}' + xhr.responseText);
                 }
             });
         }

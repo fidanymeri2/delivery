@@ -148,17 +148,17 @@ button:hover, .btn:hover {
 
         <form action="{{ route('products.stats') }}" method="GET" class="form-grid">
             <div class="form-grid-item">
-                <label for="start_date">Start Date:</label>
+                <label for="start_date">{{ __('product.start_date') }}:</label>
                 <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" class="form-control">
             </div>
             <div class="form-grid-item">
-                <label for="end_date">End Date:</label>
+                <label for="end_date">{{ __('product.end_date') }}:</label>
                 <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" class="form-control">
             </div>
             <div class="form-grid-item">
-                <label for="category_id">Category:</label>
+                <label for="category_id">{{ __('product.category') }}:</label>
                 <select name="category_id" id="category_id" class="form-control">
-                    <option value="">All Categories</option>
+                    <option value="">{{ __('product.all_categories') }}</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
@@ -167,46 +167,46 @@ button:hover, .btn:hover {
                 </select>
             </div>
             <div class="form-grid-item">
-                <label for="payment_method">Payment Method:</label>
+                <label for="payment_method">{{ __('product.payment_method') }}:</label>
                 <select name="payment_method" id="payment_method" class="form-control">
-                    <option value="">All Payment Methods</option>
-                    <option value="paypal" {{ request('payment_method') == 'paypal' ? 'selected' : '' }}>PayPal</option>
-                    <option value="credit_card" {{ request('payment_method') == 'credit_card' ? 'selected' : '' }}>Credit Card</option>
-                    <option value="cash" {{ request('payment_method') == 'cash' ? 'selected' : '' }}>Cash</option>
+                    <option value="">{{ __('product.all_payment_methods') }}</option>
+                    <option value="paypal" {{ request('payment_method') == 'paypal' ? 'selected' : '' }}>{{ __('product.paypal') }}</option>
+                    <option value="credit_card" {{ request('payment_method') == 'credit_card' ? 'selected' : '' }}>{{ __('product.credit_card') }}</option>
+                    <option value="cash" {{ request('payment_method') == 'cash' ? 'selected' : '' }}>{{ __('product.cash') }}</option>
                 </select>
             </div>
             <div class="form-grid-item">
-                <label for="stat_type">Stat Type:</label>
+                <label for="stat_type">{{ __('product.stat_type') }}:</label>
                 <select name="stat_type" id="stat_type" class="form-control">
-                    <option value="best_selling" {{ request('stat_type') == 'best_selling' ? 'selected' : '' }}>Best Seller</option>
-                    <option value="least_selling" {{ request('stat_type') == 'least_selling' ? 'selected' : '' }}>Least Sold</option>
+                    <option value="best_selling" {{ request('stat_type') == 'best_selling' ? 'selected' : '' }}>{{ __('product.best_selling') }}</option>
+                    <option value="least_selling" {{ request('stat_type') == 'least_selling' ? 'selected' : '' }}>{{ __('product.least_selling') }}</option>
                 </select>
             </div>
             <div class="form-grid-item">
                 <div class="actions">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                    <a href="{{ route('products.stats') }}" class="btn btn-danger">Reset</a>
-                    <a href="{{ route('orders.deliverystats') }}" class="btn btn-success">Delivery </a>
+                    <button type="submit" class="btn btn-primary">{{ __('product.filter') }}</button>
+                    <a href="{{ route('products.stats') }}" class="btn btn-danger">{{ __('product.reset') }}</a>
+                    <a href="{{ route('orders.deliverystats') }}" class="btn btn-success">{{ __('product.delivery') }}</a>
                 </div>
             </div>
         </form>
 
         <div class="row mb-4">
             <div class="col-md-2">
-                <a href="{{ route('products.generate_pdf', request()->all()) }}" class="btn btn-pdf btn-block">Generate PDF</a>
+                <a href="{{ route('products.generate_pdf', request()->all()) }}" class="btn btn-pdf btn-block">{{ __('product.generate_pdf') }}</a>
             </div>
         </div>
 
         @if($bestSellingProducts->isEmpty())
-            <p>No products found for the selected criteria.</p>
+            <p>{{ __('product.no_products_found') }}</p>
         @else
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Total Sold</th>
-                        <th>Total Revenue (€)</th> <!-- New column for revenue -->
+                        <th>{{ __('product.product_name') }}</th>
+                        <th>{{ __('product.category') }}</th>
+                        <th>{{ __('product.total_sold') }}</th>
+                        <th>{{ __('product.total_revenue') }} (€)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -215,7 +215,7 @@ button:hover, .btn:hover {
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category->name }}</td>
                             <td>{{ $product->total_quantity }}</td>
-                            <td>{{ number_format($product->total_revenue, 2) }}</td> <!-- Display revenue -->
+                            <td>{{ number_format($product->total_revenue, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

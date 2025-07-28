@@ -25,36 +25,36 @@
     </style>
 </head>
 <body>
-    <h2>Product Statistics</h2>
+    <h2>{{ __('product.product_statistics') }}</h2>
 
     <!-- Filter information -->
     <div class="filter-info">
-        <p><strong>Start Date:</strong> {{ $filters['start_date'] ?? 'Not Specified' }}</p>
-        <p><strong>End Date:</strong> {{ $filters['end_date'] ?? 'Not Specified' }}</p>
-        <p><strong>Category:</strong> {{ $filters['category_id'] ? $categories->firstWhere('id', $filters['category_id'])->name : 'All Categories' }}</p>
-        <p><strong>Payment Method:</strong> 
+        <p><strong>{{ __('product.start_date') }}:</strong> {{ $filters['start_date'] ?? __('product.not_specified') }}</p>
+        <p><strong>{{ __('product.end_date') }}:</strong> {{ $filters['end_date'] ?? __('product.not_specified') }}</p>
+        <p><strong>{{ __('product.category') }}:</strong> {{ $filters['category_id'] ? $categories->firstWhere('id', $filters['category_id'])->name : __('product.all_categories') }}</p>
+        <p><strong>{{ __('product.payment_method') }}:</strong> 
             @if($filters['payment_method'] == 'paypal')
-                PayPal
+                {{ __('product.paypal') }}
             @elseif($filters['payment_method'] == 'credit_card')
-                Credit Card
+                {{ __('product.credit_card') }}
             @elseif($filters['payment_method'] == 'cash')
-                Cash
+                {{ __('product.cash') }}
             @else
-                All Payment Methods
+                {{ __('product.all_payment_methods') }}
             @endif
         </p>
-        <p><strong>Stat Type:</strong> 
-            {{ $filters['stat_type'] == 'best_selling' ? 'Best Selling' : 'Least Selling' }}
+        <p><strong>{{ __('product.stat_type') }}:</strong> 
+            {{ $filters['stat_type'] == 'best_selling' ? __('product.best_selling') : __('product.least_selling') }}
         </p>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Total Sold</th>
-                <th>Total Revenue (€)</th>
+                <th>{{ __('product.product_name') }}</th>
+                <th>{{ __('product.category') }}</th>
+                <th>{{ __('product.total_sold') }}</th>
+                <th>{{ __('product.total_revenue') }} (€)</th>
             </tr>
         </thead>
         <tbody>
@@ -63,8 +63,7 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category->name }}</td>
                     <td>{{ $product->total_quantity }}</td>
-                    <td>{{ number_format($product->total_revenue, 2) }}</td> <!-- Display revenue -->
-
+                    <td>{{ number_format($product->total_revenue, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>

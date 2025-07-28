@@ -1,0 +1,2 @@
+<img src="/public/assets/yumiis-logo.png" alt="Yumiis Logo" width="380" height="380" />
+<?php /**PATH C:\Users\activ\OneDrive\Documents\Soltriks Projects\delivery\resources\views/components/authentication-card-logo.blade.php ENDPATH**/ ?>

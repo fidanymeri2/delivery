@@ -67,18 +67,18 @@
     <div class="max-w-4xl mx-auto p-6">
         <!-- Breadcrumb Navigation -->
         <div class="breadcrumb">
-            <a href="{{ route('categories.index') }}">Categories</a>
+            <a href="{{ route('categories.index') }}">{{ __('category.categories') }}</a>
             <span class="separator">/</span>
-            <span>Category Details</span>
+            <span>{{ __('category.category_details') }}</span>
         </div>
 
         <!-- Category Details -->
         <div class="container">
-            <h1>Category Details</h1>
-            <p><strong>Name:</strong> {{ $category->name }}</p>
-            <p><strong>Description:</strong> {{ $category->description }}</p>
-            <a href="{{ route('categories.index') }}"><i class="fas fa-arrow-left"></i></a>
-            <a href="{{ route('categories.edit', $category->id) }}"> <i class="fas fa-edit"></i></a>
+            <h1>{{ __('category.category_details') }}</h1>
+            <p><strong>{{ __('category.category_name') }}:</strong> {{ $category->name }}</p>
+            <p><strong>{{ __('category.category_description') }}:</strong> {{ $category->description }}</p>
+            <a href="{{ route('categories.index') }}">{{ __('category.back_to_categories') }}</a>
+            <a href="{{ route('categories.edit', $category->id) }}">{{ __('category.edit') }}</a>
 
         </div>
     </div>

@@ -21,6 +21,9 @@ use App\Http\Controllers\{
     DescriptionCategoryController ,
     SettingsController,
     MenuController,
+    TableCategoryController,
+    RestaurantTableController,
+    TableOrderController,
 };
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
@@ -53,7 +56,7 @@ Route::post('/register', [UserController::class, 'store'])
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified','banned'
+    'verified','banned','setlocale'
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('admin');
 
@@ -80,6 +83,7 @@ Route::middleware([
 
     //Settings
     Route::resource('settings', SettingsController::class)->middleware('admin');
+    Route::post('/settings/update-language', [SettingsController::class, 'updateLanguage'])->name('settings.update-language')->middleware('admin');
     Route::resource('messages', MessageController::class)->middleware('admin');
     Route::post('messages/sort', [MessageController::class, 'sort'])->name('messages.sort')->middleware('admin');
 
@@ -107,6 +111,41 @@ Route::middleware([
 
     Route::resource('waiters', WaiterController::class)->middleware('admin');
 
+    // Table Management Routes
+    Route::resource('table-categories', TableCategoryController::class)->middleware('admin');
+    Route::resource('restaurant-tables', RestaurantTableController::class)->middleware('admin');
+    Route::get('restaurant-tables/category/{category}', [RestaurantTableController::class, 'showCategory'])->name('restaurant-tables.show-category')->middleware('admin');
+    Route::get('restaurant-tables/reposition/{category}', [RestaurantTableController::class, 'reposition'])->name('restaurant-tables.reposition')->middleware('admin');
+    Route::post('restaurant-tables/save-positions', [RestaurantTableController::class, 'savePositions'])->name('restaurant-tables.save-positions')->middleware('admin');
+    
+    // Test route for debugging
+    Route::post('restaurant-tables/test-save', [RestaurantTableController::class, 'testSave'])->name('restaurant-tables.test-save')->middleware('admin');
+    
+    // POS System
+    Route::get('/pos', [App\Http\Controllers\DemoController::class, 'index'])->name('pos.index');
+Route::get('/pos/table/{tableId}/orders', [App\Http\Controllers\DemoController::class, 'getTableOrders'])->name('pos.table.orders');
+Route::post('/pos/table/add-item', [App\Http\Controllers\DemoController::class, 'addItemToTable'])->name('pos.table.add-item');
+Route::post('/pos/get-table-amounts-batch', [App\Http\Controllers\DemoController::class, 'getTableAmountsBatch'])->name('pos.table.amounts.batch');
+    
+    // POS Authentication and API
+    Route::post('/pos/authenticate-waiter', [App\Http\Controllers\PosController::class, 'authenticateWaiter'])->name('pos.authenticate-waiter');
+    Route::post('/pos/process-order', [App\Http\Controllers\PosController::class, 'processOrder'])->name('pos.process-order');
+    Route::get('/pos/waiters', [App\Http\Controllers\PosController::class, 'getWaiters'])->name('pos.waiters')->middleware('admin');
+    
+    // POS Session-based Order Management
+    Route::post('/pos/start-table-session', [App\Http\Controllers\PosController::class, 'startTableSession'])->name('pos.start-table-session');
+    Route::post('/pos/add-item-to-session', [App\Http\Controllers\PosController::class, 'addItemToSession'])->name('pos.add-item-to-session');
+    Route::get('/pos/get-table-session', [App\Http\Controllers\PosController::class, 'getTableSession'])->name('pos.get-table-session');
+    Route::delete('/pos/remove-item-from-session', [App\Http\Controllers\PosController::class, 'removeItemFromSession'])->name('pos.remove-item-from-session');
+    Route::post('/pos/finalize-table-session', [App\Http\Controllers\PosController::class, 'finalizeTableSession'])->name('pos.finalize-table-session');
+    Route::post('/pos/cancel-table-session', [App\Http\Controllers\PosController::class, 'cancelTableSession'])->name('pos.cancel-table-session');
+    
+
+    Route::resource('table-orders', TableOrderController::class);
+    Route::post('/table-orders/{tableOrder}/add-item', [TableOrderController::class, 'addItem'])->name('table-orders.add-item');
+    Route::put('/table-orders/{tableOrder}/update-item/{item}', [TableOrderController::class, 'updateItem'])->name('table-orders.update-item');
+    Route::delete('/table-orders/{tableOrder}/remove-item/{item}', [TableOrderController::class, 'removeItem'])->name('table-orders.remove-item');
+    Route::put('/table-orders/{tableOrder}/close', [TableOrderController::class, 'closeOrder'])->name('table-orders.close');
 
     Route::resource('banners', BannerController::class)->middleware('admin');
 
@@ -142,6 +181,27 @@ Route::middleware([
 
     Route::resource('feedbacks', FeedbackController::class)->middleware('admin');
 
+    // Stock Management Routes
+    Route::prefix('stock-management')->name('stock-management.')->middleware('admin')->group(function () {
+        Route::get('/', [App\Http\Controllers\StockManagementController::class, 'index'])->name('index');
+        Route::get('/transactions', [App\Http\Controllers\StockManagementController::class, 'transactions'])->name('transactions');
+        Route::get('/alerts', [App\Http\Controllers\StockManagementController::class, 'alerts'])->name('alerts');
+        Route::get('/adjust', [App\Http\Controllers\StockManagementController::class, 'selectProductForAdjustment'])->name('select-product');
+        Route::get('/product/{product}/stock', [App\Http\Controllers\StockManagementController::class, 'productStock'])->name('product-stock');
+        Route::get('/product/{product}/adjust', [App\Http\Controllers\StockManagementController::class, 'adjustStock'])->name('adjust-stock');
+        Route::post('/product/{product}/adjust', [App\Http\Controllers\StockManagementController::class, 'processStockAdjustment'])->name('process-adjustment');
+        Route::post('/product/{product}/disable-tracking', [App\Http\Controllers\StockManagementController::class, 'disableStockTracking'])->name('disable-tracking');
+        Route::post('/product/{product}/enable-tracking', [App\Http\Controllers\StockManagementController::class, 'enableStockTracking'])->name('enable-tracking');
+        Route::post('/bulk-update', [App\Http\Controllers\StockManagementController::class, 'bulkUpdate'])->name('bulk-update');
+        Route::post('/alerts/{alert}/acknowledge', [App\Http\Controllers\StockManagementController::class, 'acknowledgeAlert'])->name('acknowledge-alert');
+        Route::post('/alerts/{alert}/resolve', [App\Http\Controllers\StockManagementController::class, 'resolveAlert'])->name('resolve-alert');
+        Route::get('/export-report', [App\Http\Controllers\StockManagementController::class, 'exportStockReport'])->name('export-report');
+        
+        // API endpoints
+        Route::get('/api/summary', [App\Http\Controllers\StockManagementController::class, 'getStockSummary'])->name('api.summary');
+        Route::get('/api/low-stock', [App\Http\Controllers\StockManagementController::class, 'getLowStockProducts'])->name('api.low-stock');
+        Route::get('/api/out-of-stock', [App\Http\Controllers\StockManagementController::class, 'getOutOfStockProducts'])->name('api.out-of-stock');
+    });
 
 Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
 Route::get('/menu/create/{id}', [MenuController::class, 'create'])->name('menu.create');
