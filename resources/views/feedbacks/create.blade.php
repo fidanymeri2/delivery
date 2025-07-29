@@ -1,114 +1,80 @@
 <x-app-layout>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Add Feedback
+                        </h2>
+                        <a href="{{ route('feedbacks.index') }}"
+                           class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Back to Feedbacks
+                        </a>
+                    </div>
 
-        .container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 1rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+                    <form action="{{ route('feedbacks.store') }}" method="POST" class="space-y-6">
+                        @csrf
 
-        h1 {
-            font-size: 1.5rem;
-            color: #2854C5;
-            margin-bottom: 1rem;
-        }
+                        <div>
+                            <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">
+                                Rating
+                            </label>
+                            <input type="number"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                   id="rating"
+                                   name="rating"
+                                   value="{{ old('rating') }}"
+                                   min="1"
+                                   max="5"
+                                   required>
+                            @error('rating')
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #333;
-        }
+                        <div>
+                            <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">
+                                Comment
+                            </label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                      id="comment"
+                                      name="comment"
+                                      rows="4">{{ old('comment') }}</textarea>
+                            @error('comment')
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        input[type="text"],
-        input[type="url"],
-        input[type="file"] {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+                        <div>
+                            <label for="publish" class="block text-sm font-medium text-gray-700 mb-2">
+                                Publish
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    id="publish"
+                                    name="publish"
+                                    required>
+                                <option value="1" {{ old('publish') == 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ old('publish') == 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                            @error('publish')
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        button {
-            background-color: #2854C5;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            text-transform: uppercase;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #1d3b8b;
-        }
-
-        .error-message {
-            color: #ff4d4d;
-            margin-bottom: 1rem;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: #2854C5;
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-
-    <div class="container">
-      <h1>Add Feedback</h1>
-
-    <form action="{{ route('feedbacks.store') }}" method="POST">
-        @csrf
-
-        <div class="mb-3">
-            <label for="rating" class="form-label">Rating</label>
-            <input type="number" class="form-control" id="rating" name="rating" value="{{ old('rating') }}" min="1" max="5" required>
-            @error('rating')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+                        <div class="flex items-center justify-end space-x-3">
+                            <a href="{{ route('feedbacks.index') }}"
+                               class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Cancel
+                            </a>
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="comment" class="form-label">Comment</label>
-            <textarea class="form-control" id="comment" name="comment">{{ old('comment') }}</textarea>
-            @error('comment')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="publish" class="form-label">Publish</label>
-            <select class="form-control" id="publish" name="publish" required>
-                <option value="1" {{ old('publish') == 1 ? 'selected' : '' }}>Yes</option>
-                <option value="0" {{ old('publish') == 0 ? 'selected' : '' }}>No</option>
-            </select>
-            @error('publish')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="{{ route('feedbacks.index') }}" class="btn btn-secondary">Cancel</a>
-</form>
-        <a href="{{ route('feedbacks.index') }}" class="back-link">Back to Feedbacks</a>
     </div>
 </x-app-layout>

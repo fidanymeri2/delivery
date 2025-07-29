@@ -1,89 +1,51 @@
 <x-app-layout>
-    <style>
-        /* Breadcrumb Styles */
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0;
-            font-size: 0.875rem; /* Equivalent to text-sm */
-            color: #6b7280; /* Equivalent to text-gray-500 */
-            margin-bottom: 1rem;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <!-- Breadcrumb Navigation -->
+                    <div class="flex items-center text-sm text-gray-500 mb-6">
+                        <a href="{{ route('extra-categories.index') }}" class="text-blue-600 hover:underline">
+                            Extra Categories
+                        </a>
+                        <span class="mx-2">/</span>
+                        <span>Extra Category Details</span>
+                    </div>
 
-        .breadcrumb a {
-            color: #2854C5; /* Link color */
-            text-decoration: none;
-            margin-right: 0.5rem;
-        }
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Extra Category Details
+                        </h2>
+                    </div>
 
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
+                    <!-- Category Details -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <span class="font-semibold text-gray-700 w-20">ID:</span>
+                                <span class="text-gray-900">{{ $extraCategory->id }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="font-semibold text-gray-700 w-20">Name:</span>
+                                <span class="text-gray-900">{{ $extraCategory->name }}</span>
+                            </div>
+                        </div>
 
-        .breadcrumb .separator {
-            margin-right: 0.5rem;
-            color: #6b7280; /* Separator color */
-        }
-
-        /* Container Styles */
-        .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: auto;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 2rem; /* Equivalent to text-2xl */
-            font-weight: 700; /* Equivalent to font-bold */
-            margin-bottom: 1.5rem; /* Margin equivalent to mb-6 */
-            color: #2854C5;
-            text-align: center;
-        }
-
-        p {
-            font-size: 1rem; /* Equivalent to text-base */
-            margin-bottom: 0.5rem;
-        }
-
-        p strong {
-            color: #4b5563; /* Equivalent to text-gray-700 */
-        }
-
-        a {
-            color: #2854C5; /* Link color */
-            text-decoration: none;
-            margin-right: 1rem;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .fa {
-            margin-right: 0.5rem;
-        }
-    </style>
-
-    <div class="max-w-4xl mx-auto p-6">
-        <!-- Breadcrumb Navigation -->
-        <div class="breadcrumb">
-            <a href="{{ route('extra-categories.index') }}">Extra Categories</a>
-            <span class="separator">/</span>
-            <span>Extra Category Details</span>
-        </div>
-
-        <!-- Category Details -->
-        <div class="container">
-            <h1>Extra Category Details</h1>
-            <p><strong>ID:</strong> {{ $extraCategory->id }}</p>
-            <p><strong>Name:</strong> {{ $extraCategory->name }}</p>
-
-            <a href="{{ route('extra-categories.index') }}"><i class="fas fa-arrow-left"></i>Back to List</a>
-            <a href="{{ route('extra-categories.edit', $extraCategory->id) }}"><i class="fas fa-edit"></i>Edit</a>
+                        <div class="flex items-center space-x-4 mt-6">
+                            <a href="{{ route('extra-categories.index') }}"
+                               class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Back to List
+                            </a>
+                            <a href="{{ route('extra-categories.edit', $extraCategory->id) }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <i class="fas fa-edit mr-2"></i>
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

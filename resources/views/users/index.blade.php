@@ -1,268 +1,196 @@
 <x-app-layout>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 1rem;
-            display: flex;
-            flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
-            gap: 2rem; /* Space between columns */
-        }
-        .settings {
-            max-width: 1200px;
-            margin: auto;
-            padding: 1rem;
-        }
-        .column {
-            flex: 1; /* Flexible columns */
-            min-width: 300px; /* Ensure columns don't get too narrow */
-            background-color: #ffffff;
-            padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            font-size: 1.5rem;
-            color: #2854C5;
-            margin: 1rem 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <!-- Back to Settings Button -->
+                    <div class="mb-6">
+                        <a href="{{ route('settings.index') }}"
+                           class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <i class='fas fa-angle-left mr-2'></i> Settings
+                        </a>
+                    </div>
 
-        a {
-            text-decoration: none;
-            color: #2854C5;
-        }
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Users Column -->
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">Users</h2>
+                                <a href="{{ route('register') }}"
+                                   class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Create New User
+                                </a>
+                            </div>
 
-        a:hover {
-            text-decoration: underline;
-        }
+                            @if (session('success'))
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-green-800">
+                                                {{ session('success') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Name
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Email
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @forelse ($users as $user)
+                                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        {{ $user->name }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm text-gray-900">
+                                                        {{ $user->email }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div class="flex items-center space-x-2">
+                                                        <a href="{{ route('users.edit', $user) }}"
+                                                           class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition ease-in-out duration-150">
+                                                            <i class="fas fa-edit mr-1"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150"
+                                                                    onclick="return confirm('Are you sure?')">
+                                                                <i class="fas fa-trash mr-1"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="px-6 py-4 text-sm text-gray-500 text-center">
+                                                    No Users found.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
 
-        thead {
-            background-color: #2854C5;
-            color: white;
-        }
+                            <div class="mt-6">
+                                {{ $users->appends(['waiter_page' => request('waiter_page')])->links() }}
+                            </div>
+                        </div>
 
-        th, td {
-            padding: 0.75rem;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
+                        <!-- Waiters Column -->
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">Waiters</h2>
+                                <a href="{{ route('waiters.create') }}"
+                                   class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Create New Waiter
+                                </a>
+                            </div>
 
-        th {
-            text-transform: uppercase;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
+                            @if (session('success'))
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-green-800">
+                                                {{ session('success') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
-        tbody tr:nth-of-type(odd) {
-            background-color: #f2f2f2;
-        }
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Name
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Pin Code
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @forelse ($waiters as $waiter)
+                                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        {{ $waiter->name }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm text-gray-900">
+                                                        {{ $waiter->pin_code }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div class="flex items-center space-x-2">
+                                                        <a href="{{ route('waiters.edit', $waiter) }}"
+                                                           class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition ease-in-out duration-150">
+                                                            <i class="fas fa-edit mr-1"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('waiters.destroy', $waiter) }}" method="POST" class="inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150"
+                                                                    onclick="return confirm('Are you sure?')">
+                                                                <i class="fas fa-trash mr-1"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="px-6 py-4 text-sm text-gray-500 text-center">
+                                                    No Waiters found.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
 
-        tbody tr:hover {
-            background-color: #e6f7ff;
-        }
-
-        button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #e60000;
-        }
-
-        .actions a {
-            margin-right: 0.5rem;
-        }
-
-        .actions form {
-            display: inline;
-        }
-
-        .success-message {
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 0.75rem;
-            margin: 1rem 0;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.875rem;
-            text-decoration: none;
-            color: white;
-            transition: background-color 0.3s;
-        }
-
-        .btn-info {
-            background-color: #17a2b8;
-        }
-
-        .btn-info:hover {
-            background-color: #138496;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-            line-height: 1.5;
-            border-radius: 0.2rem;
-        }
-
-        .table-responsive {
-            display: block;
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-        }
-
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-    </style>
-        <div class="settings">
-        <x-button>
-            <a href="{{ route('settings.index') }}" class="text-white no-underline hover:no-underline"><i class='fas fa-angle-left'></i> Settings</a>
-        </x-button>
-        </div>  
-    <div class="container">
-        
-        <div class="column">
-            <h1>Users</h1>
-            <x-button>
-                <a href="{{ route('register') }}" class="text-white no-underline hover:no-underline">Create New User</a>
-            </x-button>
-
-            @if (session('success'))
-                <p class="success-message">{{ session('success') }}</p>
-            @endif
-
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($users as $user)
-                            <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td class="actions">
-                                    <!-- <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> -->
-                                    <a href="{{ route('users.edit', $user) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> </a>
-                                    <form action="{{ route('users.destroy', $user) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">No Users found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
-                {{ $users->appends(['waiter_page' => request('waiter_page')])->links() }}
-            </div>
-        </div>
-
-        <div class="column">
-            <h1>Waiters</h1>
-            <x-button>
-                <a href="{{ route('waiters.create') }}" class="text-white no-underline hover:no-underline">Create New Waiter</a>
-            </x-button>
-
-            @if (session('success'))
-                <p class="success-message">{{ session('success') }}</p>
-            @endif
-
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Pin Code</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($waiters as $waiter)
-                            <tr>
-                                <td>{{ $waiter->name }}</td>
-                                <td>{{ $waiter->pin_code }}</td>
-                                <td class="actions">
-                                    <!-- <a href="{{ route('waiters.show', $waiter) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> -->
-                                    <a href="{{ route('waiters.edit', $waiter) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> </a>
-                                    <form action="{{ route('waiters.destroy', $waiter) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">No Waiters found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
-                {{ $waiters->appends(['user_page' => request('user_page')])->links() }}
-
+                            <div class="mt-6">
+                                {{ $waiters->appends(['user_page' => request('user_page')])->links() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

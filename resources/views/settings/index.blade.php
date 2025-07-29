@@ -1,150 +1,143 @@
 <x-app-layout>
-    <style>
-        .card {
-            background-color: #fff;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 20px;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        .card:hover {
-            transform: scale(1.02);
-        }
-        .card-header {
-            font-size: 1.25rem;
-            color: #2854C5;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        .icons {
-            color: #2854C5; 
-            font-size: 2rem; 
-            display: inline-block;
-            margin-bottom: 10px; 
-        }
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.875rem;
-            text-decoration: none;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        .btn-info {
-            background-color: #17a2b8;
-        }
-        .btn-info:hover {
-            background-color: #138496;
-        }
-        .btn-primary {
-            background-color: #007bff;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .no-underline {
-            text-decoration: none;
-        }
-        .active {
-            font-weight: bold;
-            color: #007bff; 
-        }
-    </style>
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    @if(session('success'))
+                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-green-800">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-    <div class="container">
-    <a href="{{ route('products.stats') }}" class="no-underline {{ Route::currentRouteName() == 'products.stats' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-chart-line"></i></span>
-                <div class="card-header">{{ __('settings.stats') }}</div>
-            </div>
-        </a>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Statistics Card -->
+                        <a href="{{ route('products.stats') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.stats') }}</h3>
+                                <p class="text-sm text-gray-500">View product statistics and analytics</p>
+                            </div>
+                        </a>
 
+                        <!-- Messages Card -->
+                        <a href="{{ route('messages.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="far fa-comment-alt"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.messages') }}</h3>
+                                <p class="text-sm text-gray-500">Manage system messages and notifications</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('messages.index') }}" class="no-underline {{ Route::currentRouteName() == 'messages.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="far fa-comment-alt"></i></span>
-                <div class="card-header">{{ __('settings.messages') }}</div>
-            </div>
-        </a>
+                        <!-- Documents Card -->
+                        <a href="{{ route('documents.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.documents') }}</h3>
+                                <p class="text-sm text-gray-500">Manage documents and files</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('documents.index') }}" class="no-underline {{ Route::currentRouteName() == 'documents.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-file-alt"></i></span>
-                <div class="card-header">{{ __('settings.documents') }}</div>
-            </div>
-        </a>
+                        <!-- Users Card -->
+                        <a href="{{ route('users.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.users') }}</h3>
+                                <p class="text-sm text-gray-500">Manage user accounts and permissions</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('users.index') }}" class="no-underline {{ Route::currentRouteName() == 'users.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-users"></i></span>
-                <div class="card-header">{{ __('settings.users') }}</div>
-            </div>
-        </a>
+                        <!-- Partners Card -->
+                        <a href="{{ route('partners.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.partners') }}</h3>
+                                <p class="text-sm text-gray-500">Manage business partners and collaborations</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('partners.index') }}" class="no-underline {{ Route::currentRouteName() == 'partners.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-handshake"></i></span>
-                <div class="card-header">{{ __('settings.partners') }}</div>
-            </div>
-        </a>
+                        <!-- Shipping Fees Card -->
+                        <a href="{{ route('shipping-fees.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.shipping_fees') }}</h3>
+                                <p class="text-sm text-gray-500">Configure delivery and shipping costs</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('shipping-fees.index') }}" class="no-underline {{ Route::currentRouteName() == 'shipping-fees.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-truck"></i></span>
-                <div class="card-header">{{ __('settings.shipping_fees') }}</div>
-            </div>
-        </a>
+                        <!-- Banners Card -->
+                        <a href="{{ route('banners.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-ad"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.banners') }}</h3>
+                                <p class="text-sm text-gray-500">Manage promotional banners and ads</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('banners.index') }}" class="no-underline {{ Route::currentRouteName() == 'banners.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-ad"></i></span>
-                <div class="card-header">{{ __('settings.banners') }}</div>
-            </div>
-        </a>
+                        <!-- Feedbacks Card -->
+                        <a href="{{ route('feedbacks.index') }}" class="block">
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center group">
+                                <div class="text-blue-600 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('settings.feedbacks') }}</h3>
+                                <p class="text-sm text-gray-500">View and manage customer feedback</p>
+                            </div>
+                        </a>
 
-        <a href="{{ route('feedbacks.index') }}" class="no-underline {{ Route::currentRouteName() == 'feedbacks.index' ? 'active' : '' }}">
-            <div class="card">
-                <span class="icons"><i class="fas fa-star"></i></span>
-                <div class="card-header">{{ __('settings.feedbacks') }}</div>
-            </div>
-        </a>
-
-        <!-- Language Selection Card -->
-        <div class="card">
-            <span class="icons"><i class="fas fa-globe"></i></span>
-            <div class="card-header">{{ __('settings.language') }}</div>
-            <form action="{{ route('settings.update-language') }}" method="POST" class="mt-3">
-                @csrf
-                <div class="flex flex-col space-y-2">
-                    <label class="flex items-center">
-                        <input type="radio" name="language" value="en" {{ auth()->user()->language == 'en' ? 'checked' : '' }} class="mr-2">
-                        <span>{{ __('settings.english') }}</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="language" value="sq" {{ auth()->user()->language == 'sq' ? 'checked' : '' }} class="mr-2">
-                        <span>{{ __('settings.albanian') }}</span>
-                    </label>
+                        <!-- Language Selection Card -->
+                        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 text-center">
+                            <div class="text-blue-600 text-3xl mb-4">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('settings.language') }}</h3>
+                            <form action="{{ route('settings.update-language') }}" method="POST" class="space-y-3">
+                                @csrf
+                                <div class="space-y-2">
+                                    <label class="flex items-center justify-center">
+                                        <input type="radio" name="language" value="en" {{ auth()->user()->language == 'en' ? 'checked' : '' }}
+                                               class="mr-2 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ __('settings.english') }}</span>
+                                    </label>
+                                    <label class="flex items-center justify-center">
+                                        <input type="radio" name="language" value="sq" {{ auth()->user()->language == 'sq' ? 'checked' : '' }}
+                                               class="mr-2 text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-700">{{ __('settings.albanian') }}</span>
+                                    </label>
+                                </div>
+                                <button type="submit"
+                                        class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                    {{ __('settings.save_changes') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 w-full">{{ __('settings.save_changes') }}</button>
-            </form>
+            </div>
         </div>
     </div>
-
-    @if(session('success'))
-        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
-            {{ session('success') }}
-        </div>
-    @endif
 </x-app-layout>

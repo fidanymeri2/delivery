@@ -2,7 +2,7 @@
     <style>
         .dashboard-container {
             padding: 1.5rem;
-            background-color: #f8fafc;
+            background-color: #f9fafb;
             min-height: 100vh;
         }
 
@@ -14,7 +14,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 12px;

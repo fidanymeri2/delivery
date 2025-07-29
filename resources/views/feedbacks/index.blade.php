@@ -1,208 +1,91 @@
 <x-app-layout>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9fafb;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 1rem;
-    }
-    h1 {
-        font-size: 1.5rem;
-        color: #2854C5;
-        margin: 1rem;
-    }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            All Feedbacks
+                        </h2>
+                        <a href="{{ route('feedbacks.create') }}"
+                           class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Add Feedback
+                        </a>
+                    </div>
 
-    a {
-        text-decoration: none;
-        color: #2854C5;
-    }
-
-    a:hover {
-        text-decoration: underline;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    thead {
-        background-color: #2854C5;
-        color: white;
-    }
-
-    th, td {
-        padding: 0.75rem;
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-        box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
-    }
-
-    th {
-        text-transform: uppercase;
-        font-weight: 600;
-        font-size: 0.875rem;
-    }
-
-    tbody tr:nth-of-type(odd) {
-        background-color: #f2f2f2;
-    }
-
-    tbody tr:hover {
-        background-color: #e6f7ff;
-    }
-
-    button {
-        background-color: #ff4d4d;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-    }
-
-    button:hover {
-        background-color: #e60000;
-    }
-
-    .actions a {
-        margin-right: 0.5rem;
-    }
-
-    .actions form {
-        display: inline;
-    }
-
-    .success-message {
-        background-color: #dff0d8;
-        color: #3c763d;
-        padding: 0.75rem;
-        margin: 1rem 0;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        text-align: center;
-        font-size: 0.875rem;
-        text-decoration: none;
-        color: white;
-        transition: background-color 0.3s;
-    }
-
-    .btn-info {
-        background-color: #17a2b8;
-    }
-
-    .btn-info:hover {
-        background-color: #138496;
-        text-decoration: none;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        text-decoration: none; 
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-        text-decoration: none; 
-    }
-
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        line-height: 1.5;
-        border-radius: 0.2rem;
-    }
-
-    .table-responsive {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    /* Specific rule for centering images in table cells */
-    td img {
-        display: inline-block;
-        vertical-align: middle;
-    }
-</style>
-
-
-    <div class="container">
-
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>All Feedbacks</h1>
-        <a href="{{ route('feedbacks.create') }}" class="btn btn-primary">Add Feedback</a>
-    </div>
-
-    @if($feedbacks->count())
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Rating</th>
-                    <th>Comment</th>
-                    <th>Publish</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($feedbacks as $feedback)
-                    <tr>
-                        <td>{{ $feedback->id }}</td>
-                        <td>{{ $feedback->rating }}</td>
-                        <td>{{ $feedback->comment }}</td>
-                        <td>{{ $feedback->publish ? 'Published' : 'Not Published' }}</td>
-                        <td>
-                            <a href="{{ route('feedbacks.edit', $feedback->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                            <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p>No feedback available.</p>
-    @endif
+                    @if($feedbacks->count())
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            ID
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Rating
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Comment
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Publish
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($feedbacks as $feedback)
+                                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    {{ $feedback->id }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">
+                                                    {{ $feedback->rating }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">
+                                                    {{ $feedback->comment }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">
+                                                    {{ $feedback->publish ? 'Published' : 'Not Published' }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex items-center space-x-2">
+                                                    <a href="{{ route('feedbacks.edit', $feedback->id) }}"
+                                                       class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition ease-in-out duration-150">
+                                                        Edit
+                                                    </a>
+                                                    <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                                class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150">
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-12">
+                            <p class="text-gray-500 text-lg">No feedback available.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>

@@ -1,150 +1,154 @@
 <x-app-layout>
-<style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    @if (session('success'))
+                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-green-800">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-        .product-container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            background: #fff;
-            padding: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+                    <!-- Product Details -->
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-blue-600 mb-6">
+                            {{ __('product.product_details') }}
+                        </h2>
 
-        .product-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-        }
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <div class="p-6">
+                                <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
+                                    <!-- Product Image -->
+                                    @if($product->image)
+                                        <div class="flex-shrink-0 mb-6 lg:mb-0">
+                                            <img src="{{ asset($product->image) }}"
+                                                 alt="{{ $product->name }}"
+                                                 class="w-48 h-48 object-cover rounded-lg shadow-md">
+                                        </div>
+                                    @endif
 
-        .product-header img {
-            max-width: 100%;
-            width: 200px;
-            margin-right: 2rem;
-            border-radius: 8px;
-        }
+                                    <!-- Product Information -->
+                                    <div class="flex-1">
+                                        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $product->name }}</h1>
 
-        .product-details {
-            flex: 1;
-        }
+                                        <div class="space-y-3">
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-500 w-32">{{ __('product.category') }}:</span>
+                                                <span class="text-sm text-gray-900">{{ $product->category->name }}</span>
+                                            </div>
 
-        .product-details h1 {
-            font-size: 1.75rem;
-            color: #2854C5;
-            margin: 0 0 1rem 0;
-        }
+                                            <div class="flex items-start">
+                                                <span class="text-sm font-medium text-gray-500 w-32 mt-1">{{ __('product.description') }}:</span>
+                                                <span class="text-sm text-gray-900 flex-1">{{ $product->description }}</span>
+                                            </div>
 
-        .product-details p {
-            margin: 0.5rem 0;
-            font-size: 1rem;
-        }
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-500 w-32">{{ __('product.new_product') }}:</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->new_product ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ $product->new_product ? __('product.yes') : __('product.no') }}
+                                                </span>
+                                            </div>
 
-        .product-sizes, .extra-products {
-            margin: 2rem 0;
-        }
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-500 w-32">{{ __('product.new_offers') }}:</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->new_offers ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ $product->new_offers ? __('product.yes') : __('product.no') }}
+                                                </span>
+                                            </div>
 
-        .product-sizes table, .extra-products ul {
-            width: 100%;
-            border-collapse: collapse;
-        }
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-500 w-32">{{ __('product.suggested') }}:</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->suggested ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800' }}">
+                                                    {{ $product->suggested ? __('product.yes') : __('product.no') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        .product-sizes th, .product-sizes td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+                    <!-- Product Sizes Section -->
+                    @if($product->sizes && $product->sizes->count() > 0)
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">{{ __('product.product_sizes') }}</h3>
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('product.size') }}</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('product.price') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach($product->sizes as $size)
+                                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $size->name }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $size->price }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
 
-        .product-sizes th {
-            text-transform: uppercase;
-            font-weight: 600;
-            font-size: 0.875rem;
-            background-color: #2854C5;
-            color: white;
-        }
+                    <!-- Extra Products Section -->
+                    @if($product->extras && $product->extras->count() > 0)
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">{{ __('product.extra_products') }}</h3>
+                            <div class="bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <div class="px-6 py-4">
+                                    <div class="space-y-4">
+                                        @foreach($product->extras as $extra)
+                                            <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 class="text-sm font-medium text-gray-900">{{ $extra->name }}</h4>
+                                                        @if($extra->category)
+                                                            <p class="text-xs text-gray-500 italic">{{ $extra->category->name }}</p>
+                                                        @endif
+                                                    </div>
+                                                    @if($extra->prices && $extra->prices->count() > 0)
+                                                        <div class="text-sm text-gray-900">
+                                                            @foreach($extra->prices as $price)
+                                                                <span class="inline-block bg-gray-100 rounded px-2 py-1 mr-2">{{ $price->price }}</span>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-        .product-sizes tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .extra-products ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .extra-products li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .extra-products li:last-child {
-            border-bottom: none;
-        }
-
-        .extra-products .category {
-            font-style: italic;
-            color: #555;
-        }
-
-        .back-button {
-            display: inline-block;
-            margin-top: 1rem;
-            background-color: #2854C5;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .back-button:hover {
-            background-color: #003a8c;
-        }
-
-        @media (max-width: 768px) {
-            .product-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .product-header img {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-
-            .product-details h1 {
-                font-size: 1.5rem;
-            }
-
-            .product-details p {
-                font-size: 0.875rem;
-            }
-        }
-    </style>
-
-    <div class="product-container">
-        <div class="product-header">
-            @if($product->image)
-                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
-            @endif
-            <div class="product-details">
-                <h1>{{ $product->name }}</h1>
-                <p><strong>{{ __('product.category') }}:</strong> {{ $product->category->name }}</p>
-                <p><strong>{{ __('product.description') }}:</strong> {{ $product->description }}</p>
-                <p><strong>{{ __('product.new_product') }}:</strong> {{ $product->new_product ? __('product.yes') : __('product.no') }}</p>
-                <p><strong>{{ __('product.new_offers') }}:</strong> {{ $product->new_offers ? __('product.yes') : __('product.no') }}</p>
-                <p><strong>{{ __('product.suggested') }}:</strong>  {{ $product->suggested ? __('product.yes') : __('product.no') }} </p>
+                    <!-- Back Button -->
+                    <div class="mt-8">
+                        <a href="{{ route('products.index') }}"
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            {{ __('product.back_to_products') }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-
-    
-        <a href="{{ route('products.index') }}" class="back-button">{{ __('product.back_to_products') }}</a>
     </div>
 </x-app-layout>

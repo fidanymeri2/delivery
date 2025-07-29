@@ -1,81 +1,48 @@
 <x-app-layout>
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Create New Document
+                        </h2>
+                    </div>
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #333;
-        }
+                    <form action="{{ route('documents.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-6">
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                Category
+                            </label>
+                            <input type="text"
+                                   name="category"
+                                   id="category"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                   required>
+                        </div>
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+                        <div class="mb-6">
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                                Content
+                            </label>
+                            <textarea name="content"
+                                      id="summernote"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                      rows="10"
+                                      required></textarea>
+                        </div>
 
-        label {
-            display: block;
-            font-size: 1rem;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
-        }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    
-    <div class="container">
-        <h1>Create New Document</h1>
-
-        <form action="{{ route('documents.store') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label for="category">Category</label>
-                <input type="text" name="category" id="category" class="form-control" required>
+                        <div class="flex items-center justify-end">
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Save Document
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="content">Content</label>
-                <textarea name="content" id="summernote" class="form-control" rows="10" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Document</button>
-        </form>
+        </div>
     </div>
 
     <!-- Include libraries(jQuery) -->

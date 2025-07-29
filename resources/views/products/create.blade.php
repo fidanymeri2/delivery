@@ -1,351 +1,236 @@
 <x-app-layout>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            {{ __('product.create_product') }}
+                        </h2>
+                        <a href="{{ route('products.index') }}"
+                           class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            {{ __('product.back_to_products') }}
+                        </a>
+                    </div>
 
-        h1 {
-            font-size: 1.5rem;
-            color: #2854C5;
-            margin: 1rem;
-        }
+                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('product.category') }}:
+                                </label>
+                                <select name="category_id" id="category_id" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('product.name') }}:
+                                </label>
+                                <input type="text" name="name" id="name" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
 
-        .form-grid label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
+                            <div class="md:col-span-2">
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('product.description') }}:
+                                </label>
+                                <textarea name="description" id="description" rows="4"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
 
-        .form-grid input,
-        .form-grid select,
-        .form-grid textarea {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 0.5rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
+                            <div>
+                                <label for="allergies" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('product.allergies') }}:
+                                </label>
+                                <input type="text" name="allergies" id="allergies" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
 
-        .form-grid textarea {
-            height: 100px;
-        }
+                            <div>
+                                <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('product.upload_image') }}:
+                                </label>
+                                <input type="file" name="image" id="image"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
 
-        .form-grid .full-width {
-            grid-column: span 2;
-        }
+                            <!-- Checkboxes -->
+                            <div class="md:col-span-2">
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <input type="hidden" name="new_product" value="0">
+                                        <input type="checkbox" name="new_product" id="new_product" value="1"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="new_product" class="ml-2 block text-sm text-gray-900">
+                                            {{ __('product.new_product') }}
+                                        </label>
+                                    </div>
 
-        button {
-            background-color: #2854C5;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 1rem;
-        }
+                                    <div class="flex items-center">
+                                        <input type="hidden" name="new_offers" value="0">
+                                        <input type="checkbox" name="new_offers" id="new_offers" value="1"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="new_offers" class="ml-2 block text-sm text-gray-900">
+                                            {{ __('product.new_offers') }}
+                                        </label>
+                                    </div>
 
-        button:hover {
-            background-color: #1e3a8a;
-        }
+                                    <div class="flex items-center">
+                                        <input type="hidden" name="suggested" value="0">
+                                        <input type="checkbox" name="suggested" id="suggested" value="1"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="suggested" class="ml-2 block text-sm text-gray-900">
+                                            {{ __('product.suggested') }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-        }
+                            <!-- Stock Management Section -->
+                            <div class="md:col-span-2">
+                                <h3 class="text-lg font-semibold text-gray-700 mb-4 mt-6">
+                                    {{ __('product.stock_management') }}
+                                </h3>
 
-        .checkbox-wrapper input[type="checkbox"] {
-            display: none;
-        }
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div class="flex items-center">
+                                        <input type="hidden" name="requires_stock" value="0">
+                                        <input type="checkbox" name="requires_stock" id="requires_stock" value="1"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="requires_stock" class="ml-2 block text-sm text-gray-900">
+                                            {{ __('product.requires_stock_tracking') }}
+                                        </label>
+                                    </div>
 
-        .checkbox-wrapper label {
-            position: relative;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            padding-left: 40px;
-        }
+                                    <div class="flex items-center">
+                                        <input type="hidden" name="low_stock_alert" value="0">
+                                        <input type="checkbox" name="low_stock_alert" id="low_stock_alert" value="1"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="low_stock_alert" class="ml-2 block text-sm text-gray-900">
+                                            {{ __('product.enable_low_stock_alerts') }}
+                                        </label>
+                                    </div>
+                                </div>
 
-        .checkbox-wrapper label::before {
-            content: '';
-            display: inline-block;
-            width: 34px;
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 50px;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            transition: background-color 0.3s;
-        }
+                                <div id="stock-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4" style="display: none;">
+                                    <div>
+                                        <label for="current_stock" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.current_stock') }}:
+                                        </label>
+                                        <input type="number" name="current_stock" id="current_stock" min="0" value="0"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
 
-        .checkbox-wrapper label::after {
-            content: '';
-            display: block;
-            width: 16px;
-            height: 16px;
-            background-color: #fff;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 2px;
-            transform: translateY(-50%);
-            transition: transform 0.3s;
-        }
+                                    <div>
+                                        <label for="stock_unit" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.stock_unit') }}:
+                                        </label>
+                                        <select name="stock_unit" id="stock_unit"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            <optgroup label="Sasi (copë)">
+                                                <option value="copë">copë</option>
+                                                <option value="porcion">porcion</option>
+                                                <option value="artikull">artikull</option>
+                                            </optgroup>
+                                            <optgroup label="Peshë (masa)">
+                                                <option value="gram">gram (g)</option>
+                                                <option value="kilogram">kilogram (kg)</option>
+                                            </optgroup>
+                                            <optgroup label="Vëllim (lëngje)">
+                                                <option value="litër">litër (L)</option>
+                                                <option value="mililitër">mililitër (ml)</option>
+                                                <option value="decilitër">decilitër (dl)</option>
+                                            </optgroup>
+                                            <optgroup label="Njësi pakete">
+                                                <option value="shishe">shishe</option>
+                                                <option value="kuti">kuti</option>
+                                                <option value="thes">thes</option>
+                                            </optgroup>
+                                            <optgroup label="Njësi konsumi">
+                                                <option value="lugë">lugë</option>
+                                                <option value="filxhan">filxhan</option>
+                                                <option value="gotë">gotë</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
 
-        .checkbox-wrapper input[type="checkbox"]:checked + label::before {
-            background-color: #2854C5;
-        }
+                                    <div>
+                                        <label for="min_stock_level" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.min_stock_level') }}:
+                                        </label>
+                                        <input type="number" name="min_stock_level" id="min_stock_level" min="0" value="0"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
 
-        .checkbox-wrapper input[type="checkbox"]:checked + label::after {
-            transform: translateX(14px) translateY(-50%);
-        }
-        .extra-products-section {
-    padding: 20px;
-}
+                                    <div>
+                                        <label for="max_stock_level" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.max_stock_level') }} ({{ __('product.optional') }}):
+                                        </label>
+                                        <input type="number" name="max_stock_level" id="max_stock_level" min="0"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
-    gap: 20px; /* Space between items */
-}
+                        <!-- Product Sizes Section -->
+                        <div class="mt-8">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-4">
+                                {{ __('product.product_sizes') }}
+                            </h3>
 
-.product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    background-color: #f9f9f9;
-}
+                            <div id="sizes-container">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 size-entry" data-index="0">
+                                    <div>
+                                        <label for="price-0" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.price') }}:
+                                        </label>
+                                        <input type="number" name="sizes[0][price]" step="any" id="price-0" required
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="dimensions-0" class="block text-sm font-medium text-gray-700 mb-2">
+                                            {{ __('product.description') }}:
+                                        </label>
+                                        <select name="sizes[0][dimensions]" id="dimensions-0"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            @foreach($desc as $de)
+                                                <option value="{{ $de->id }}">{{ $de->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
-.product-card h4 {
-    margin-top: 0;
-    font-size: 1.2em;
-}
+                            <button type="button" id="add-size-button"
+                                    class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                {{ __('product.add_size') }}
+                            </button>
+                        </div>
 
-.product-card p {
-    font-size: 1em;
-    margin: 10px 0;
-}
-
-.product-card input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-.product-card label {
-    font-size: 0.9em;
-}
-
-.select-all {
-    margin-bottom: 10px;
-}
-
-.select-all input[type="checkbox"] {
-    margin-right: 5px;
-}
-.table-responsive {
-            display: block;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-        }
-
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-    </style>
-
-    <div class="form-container">
-        <h1>Create Product</h1>
-
-        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" >
-            @csrf
-
-            <div class="form-grid">
-                <div>
-                    <label for="category_id">Category:</label>
-                    <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="category_id" id="category_id" required>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
+                        <!-- Submit Button -->
+                        <div class="mt-8">
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                {{ __('product.create_product') }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div>
-                    <label for="name">{{ __('product.name') }}:</label>
-                    <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="name" id="name" required>
-                </div>
-
-                <div class="full-width">
-                    <label for="description">{{ __('product.description') }}:</label>
-                    <textarea class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="description" id="description"></textarea>
-                </div>
-                <div>
-                    <label for="allergies">{{ __('product.allergies') }}:</label>
-                    <input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" name="allergies" id="allergies" required>
-                </div>
-
-                <div>
-    <label for="image">{{ __('product.upload_image') }}:</label>
-    <input type="file" name="image" id="image">
-</div>
-
-                <div class="full-width">
-    <div class="checkbox-wrapper">
-        <input type="hidden" name="new_product" value="0">
-        <input type="checkbox" name="new_product" id="new_product" value="1">
-        <label for="new_product">{{ __('product.new_product') }}</label>
-    </div>
-</div>
-
-<div class="full-width">
-    <div class="checkbox-wrapper">
-        <input type="hidden" name="new_offers" value="0">
-        <input type="checkbox" name="new_offers" id="new_offers" value="1">
-        <label for="new_offers">{{ __('product.new_offers') }}</label>
-    </div>
-</div>
-
-<div class="full-width">
-    <div class="checkbox-wrapper">
-        <input type="hidden" name="suggested" value="0">
-        <input type="checkbox" name="suggested" id="suggested" value="1">
-        <label for="suggested">{{ __('product.suggested') }}</label>
-    </div>
-</div>
-
-<!-- Stock Management Section -->
-<div class="full-width">
-    <h3 class="text-lg font-semibold text-gray-700 mb-4 mt-6">{{ __('product.stock_management') }}</h3>
-    
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <div class="checkbox-wrapper">
-                <input type="hidden" name="requires_stock" value="0">
-                <input type="checkbox" name="requires_stock" id="requires_stock" value="1">
-                <label for="requires_stock">{{ __('product.requires_stock_tracking') }}</label>
-            </div>
-        </div>
-        
-        <div>
-            <div class="checkbox-wrapper">
-                <input type="hidden" name="low_stock_alert" value="0">
-                <input type="checkbox" name="low_stock_alert" id="low_stock_alert" value="1">
-                <label for="low_stock_alert">{{ __('product.enable_low_stock_alerts') }}</label>
             </div>
         </div>
     </div>
-    
-    <div id="stock-fields" class="grid grid-cols-2 gap-4 mt-4" style="display: none;">
-        <div>
-            <label for="current_stock">{{ __('product.current_stock') }}:</label>
-            <input type="number" name="current_stock" id="current_stock" min="0" value="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-        
-        <div>
-            <label for="stock_unit">{{ __('product.stock_unit') }}:</label>
-            <select name="stock_unit" id="stock_unit" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <optgroup label="Sasi (copë)">
-                    <option value="copë">copë</option>
-                    <option value="porcion">porcion</option>
-                    <option value="artikull">artikull</option>
-                </optgroup>
-                <optgroup label="Peshë (masa)">
-                    <option value="gram">gram (g)</option>
-                    <option value="kilogram">kilogram (kg)</option>
-                </optgroup>
-                <optgroup label="Vëllim (lëngje)">
-                    <option value="litër">litër (L)</option>
-                    <option value="mililitër">mililitër (ml)</option>
-                    <option value="decilitër">decilitër (dl)</option>
-                </optgroup>
-                <optgroup label="Njësi pakete">
-                    <option value="shishe">shishe</option>
-                    <option value="kuti">kuti</option>
-                    <option value="thes">thes</option>
-                </optgroup>
-                <optgroup label="Njësi konsumi">
-                    <option value="lugë">lugë</option>
-                    <option value="filxhan">filxhan</option>
-                    <option value="gotë">gotë</option>
-                </optgroup>
-            </select>
-        </div>
-        
-        <div>
-            <label for="min_stock_level">{{ __('product.min_stock_level') }}:</label>
-            <input type="number" name="min_stock_level" id="min_stock_level" min="0" value="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-        
-        <div>
-            <label for="max_stock_level">{{ __('product.max_stock_level') }} ({{ __('product.optional') }}):</label>
-            <input type="number" name="max_stock_level" id="max_stock_level" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-    </div>
-</div>
 
-            </div>
+    <script>
+        var options = "<?php foreach($desc as $de){ echo "<option value='".$de->id."'>".$de->name."</option>";  }  ?>";
 
-            <div id="sizes-container" class="mt-4">
-    <div class="grid grid-cols-2 gap-4 size-entry" data-index="0">
-        <div>
-            <label for="price-0" class="block">{{ __('product.price') }}:</label>
-            <input type="number" name="sizes[0][price]" step="any" id="price-0" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-        <div>
-            <label for="dimensions-0" class="block">{{ __('product.description') }}:</label>
-<select  name="sizes[0][dimensions]" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    @foreach($desc as $de)
-<option value="{{ $de->id }}">{{ $de->name }}</option>
-@endforeach 
-</select>
-        </div>
-    </div>
-</div>
-
-
-            <button type="button" id="add-size-button">{{ __('product.add_size') }}</button> <br>
-
-       
-
-
-            <button type="submit">{{ __('product.create_product') }}</button>
-        </form>
-
-<script>
-
-    var options = "<?php foreach($desc as $de){ echo "<option value='".$de->id."'>".$de->name."</option>";  }  ?>";
-        
         document.addEventListener('DOMContentLoaded', function() {
             let index = 1; // Start with index 1 since index 0 is already in the form
             const sizesContainer = document.getElementById('sizes-container');
@@ -354,21 +239,20 @@
             addSizeButton.addEventListener('click', function() {
                 // Create a new size entry
                 const newSizeEntry = document.createElement('div');
-                newSizeEntry.classList.add('grid', 'grid-cols-2', 'gap-4', 'size-entry');
+                newSizeEntry.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4', 'size-entry');
                 newSizeEntry.setAttribute('data-index', index);
 
                 newSizeEntry.innerHTML = `
                     <div>
-                        <label for="price-${index}" class="block">{{ __('product.price') }}:</label>
-                        <input type="number" name="sizes[${index}][price]" step="any" id="price-${index}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <label for="price-${index}" class="block text-sm font-medium text-gray-700 mb-2">{{ __('product.price') }}:</label>
+                        <input type="number" name="sizes[${index}][price]" step="any" id="price-${index}" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
-                        <label for="dimensions-${index}" class="block">{{ __('product.description') }}</label>
-                            <select name="sizes[${index}][dimensions]" id="dimensions-${index}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                ${options}
-                            </select>
+                        <label for="dimensions-${index}" class="block text-sm font-medium text-gray-700 mb-2">{{ __('product.description') }}</label>
+                        <select name="sizes[${index}][dimensions]" id="dimensions-${index}" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            ${options}
+                        </select>
                     </div>
-                    
                 `;
 
                 sizesContainer.appendChild(newSizeEntry);
@@ -377,65 +261,62 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-    // Attach event listeners to each "Select All" checkbox
-    document.querySelectorAll('.select-all-checkbox').forEach(selectAllCheckbox => {
-        selectAllCheckbox.addEventListener('change', function () {
-            // Get the category ID from the checkbox ID
-            const categoryId = this.id.split('_').pop();
+            // Attach event listeners to each "Select All" checkbox
+            document.querySelectorAll('.select-all-checkbox').forEach(selectAllCheckbox => {
+                selectAllCheckbox.addEventListener('change', function () {
+                    // Get the category ID from the checkbox ID
+                    const categoryId = this.id.split('_').pop();
 
-            // Select or deselect all checkboxes in the table rows under this category
-            document.querySelectorAll(`input[type="checkbox"][id^="extra_product_${categoryId}_"]`).forEach(productCheckbox => {
-                productCheckbox.checked = this.checked;
+                    // Select or deselect all checkboxes in the table rows under this category
+                    document.querySelectorAll(`input[type="checkbox"][id^="extra_product_${categoryId}_"]`).forEach(productCheckbox => {
+                        productCheckbox.checked = this.checked;
+                    });
+                });
             });
-        });
-    });
-    
-    // Stock management toggle
-    const requiresStockCheckbox = document.getElementById('requires_stock');
-    const stockFields = document.getElementById('stock-fields');
-    
-    if (requiresStockCheckbox && stockFields) {
-        requiresStockCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                stockFields.style.display = 'grid';
-            } else {
-                stockFields.style.display = 'none';
+
+            // Stock management toggle
+            const requiresStockCheckbox = document.getElementById('requires_stock');
+            const stockFields = document.getElementById('stock-fields');
+
+            if (requiresStockCheckbox && stockFields) {
+                requiresStockCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        stockFields.style.display = 'grid';
+                    } else {
+                        stockFields.style.display = 'none';
+                    }
+                });
             }
         });
-    }
-});
-
-
     </script>
-    </div>
-</x-app-layout>
 
-<script>
-    document.getElementById('image').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const img = new Image();
+    <script>
+        document.getElementById('image').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const img = new Image();
 
-        // Check file size (not more than 1MB)
-        const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
-        if (file.size > maxSizeInBytes) {
-            alert('{{ __('product.image_size_error') }}');
-            event.target.value = ''; // Reset the file input
-            return;
-        }
-
-        img.onload = function() {
-            const width = img.width;
-            const height = img.height;
-
-            // Check for specific resolution range
-            if (width < 800 || width > 1000 || height < 800 || height > 1000) {
-                alert('{{ __('product.image_resolution_error') }}');
+            // Check file size (not more than 1MB)
+            const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
+            if (file.size > maxSizeInBytes) {
+                alert('{{ __('product.image_size_error') }}');
                 event.target.value = ''; // Reset the file input
+                return;
             }
-        };
 
-        if (file) {
-            img.src = URL.createObjectURL(file);
-        }
-    });
-</script>
+            img.onload = function() {
+                const width = img.width;
+                const height = img.height;
+
+                // Check for specific resolution range
+                if (width < 800 || width > 1000 || height < 800 || height > 1000) {
+                    alert('{{ __('product.image_resolution_error') }}');
+                    event.target.value = ''; // Reset the file input
+                }
+            };
+
+            if (file) {
+                img.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+</x-app-layout>

@@ -1,118 +1,67 @@
 <x-app-layout>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Product Details
+                        </h2>
+                        <div class="flex items-center space-x-2">
+                            <a href="{{ route('extra-products.index') }}"
+                               class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Back to List
+                            </a>
+                            <a href="{{ route('extra-products.edit', $extraProduct->id) }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Edit Product
+                            </a>
+                        </div>
+                    </div>
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .card-header {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #2854C5;
-            border-bottom: 2px solid #2854C5;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-body {
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .card-body dl {
-            margin: 0;
-            padding: 0;
-        }
-
-        .card-body dt {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-body dd {
-            margin: 0 0 1rem;
-        }
-
-        .actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.875rem;
-            text-decoration: none;
-            color: white;
-            transition: background-color 0.3s;
-        }
-
-        .btn-info {
-            background-color: #17a2b8;
-        }
-
-        .btn-info:hover {
-            background-color: #138496;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            text-decoration: none;
-        }
-    </style>
-
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                Product Details
-            </div>
-            <div class="card-body">
-                <dl>
-                    <dt>Name:</dt>
-                    <dd>{{ $extraProduct->name }}</dd>
-
-                    <dt>Description:</dt>
-                    <dd>{{ $extraProduct->description }}</dd>
-
-                    <dt>Price:</dt>
-                    <dd>${{ number_format($extraProduct->price, 2) }}</dd>
-
-                    <dt>Category:</dt>
-                    <dd>{{ $extraProduct->category->name ?? 'Uncategorized' }}</dd>
-                </dl>
-
-                <div class="actions">
-                    <a href="{{ route('extra-products.index') }}" class="btn btn-info">
-                        Back to List
-                    </a>
-                    <a href="{{ route('extra-products.edit', $extraProduct->id) }}" class="btn btn-primary">
-                        Edit Product
-                    </a>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:px-6">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Extra Product Information
+                            </h3>
+                        </div>
+                        <div class="border-t border-gray-200">
+                            <dl>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Name
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        {{ $extraProduct->name }}
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Description
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        {{ $extraProduct->description }}
+                                    </dd>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Price
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        ${{ number_format($extraProduct->price, 2) }}
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Category
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        {{ $extraProduct->category->name ?? 'Uncategorized' }}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

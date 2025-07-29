@@ -1,275 +1,167 @@
 <x-app-layout>
-<style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="py-12">
+        <div class="mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Extra Products
+                        </h2>
+                        <a href="{{ route('extra-products.create') }}"
+                           class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Create New Extra Product
+                        </a>
+                    </div>
 
-        h1 {
-            font-size: 1.5rem;
-            color: #2854C5;
-            margin: 1rem;
-        }
+                    @if (session('success'))
+                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-green-800">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
-        a {
-            text-decoration: none;
-            color: #2854C5;
-        }
+                    <!-- Filter Form -->
+                    <form method="GET" action="{{ route('extra-products.index') }}" class="mb-6">
+                        <div class="flex items-center space-x-4">
+                            <label for="extra-category" class="text-sm font-medium text-gray-700">
+                                Filter by Extra Category:
+                            </label>
+                            <select name="extra_category_id" id="extra-category"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                    onchange="this.form.submit()">
+                                <option value="">All Extra Categories</option>
+                                @foreach ($extraCategories as $extraCategory)
+                                    <option value="{{ $extraCategory->id }}" {{ $extraCategory->id == $extraCategoryId ? 'selected' : '' }}>
+                                        {{ $extraCategory->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
 
-        a:hover {
-            text-decoration: underline;
-        }
+                    <!-- Extra Products Table -->
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Description
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Price
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Category
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="sortable-extra-products" class="bg-white divide-y divide-gray-200">
+                                @forelse ($extraProducts as $product)
+                                    <tr data-id="{{ $product->id }}" class="hover:bg-gray-50 transition-colors duration-200">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $product->name }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm text-gray-900">
+                                                {{ Str::limit($product->description, 50) }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">
+                                                {{ number_format($product->price, 2) }} €
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">
+                                                {{ $product->category->name ?? 'Uncategorized' }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div class="flex items-center space-x-2">
+                                                <a href="{{ route('extra-products.show', $product->id) }}"
+                                                   class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                                                    <i class="fas fa-eye mr-1"></i> View
+                                                </a>
+                                                <a href="{{ route('extra-products.edit', $product->id) }}"
+                                                   class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition ease-in-out duration-150">
+                                                    <i class="fas fa-edit mr-1"></i> Edit
+                                                </a>
+                                                <form action="{{ route('extra-products.destroy', $product->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150"
+                                                            onclick="return confirm('Are you sure?')">
+                                                        <i class="fas fa-trash mr-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                            No Extra Products found.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 1rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        thead {
-            background-color: #2854C5;
-            color: white;
-        }
-
-        th, td {
-            padding: 0.75rem;
-            border-bottom: 1px solid #ddd;
-            text-align: center; 
-        }
-
-        th {
-            text-transform: uppercase;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tbody tr:hover {
-            background-color: #e6f7ff;
-        }
-
-        button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-            text-align: center; 
-
-        }
-
-        button:hover {
-            background-color: #e60000;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .success-message {
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 0.75rem;
-            margin: 1rem 0;
-            border: 1px solid #d6e9c6;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 0.875rem;
-    text-decoration: none; /* Ensures no underline by default */
-    color: white;
-    transition: background-color 0.3s;
-}
-
-.btn-info {
-    background-color: #17a2b8;
-}
-
-.btn-info:hover {
-    background-color: #138496;
-    text-decoration: none;
-}
-
-.btn-primary {
-    background-color: #007bff;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    text-decoration: none; 
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    text-decoration: none; 
-}
-
-.filter-form {
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.filter-form label {
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.filter-select {
-    padding: 0.5rem;
-    padding-right: 2rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: border-color 0.3s;
-}
-
-.filter-select:hover {
-    border-color: #2854C5;
-}
-
-
-@media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            table {
-                font-size: 0.875rem;
-            }
-
-            th, td {
-                padding: 0.5rem;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-        }
-
-    </style>
-
-<div class="container">
-    <x-button>
-        <a href="{{ route('extra-products.create') }}" class="text-white no-underline hover:no-underline">Create New Extra Product</a>
-    </x-button>
-
-    @if (session('success'))
-        <div class="success-message">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <form method="GET" action="{{ route('extra-products.index') }}" class="filter-form">
-        <label for="extra-category">Filter by Extra Category:</label>
-        <select name="extra_category_id" id="extra-category" class="filter-select" onchange="this.form.submit()">
-            <option value="">All Extra Categories</option>
-            @foreach ($extraCategories as $extraCategory)
-                <option value="{{ $extraCategory->id }}" {{ $extraCategory->id == $extraCategoryId ? 'selected' : '' }}>
-                    {{ $extraCategory->name }}
-                </option>
-            @endforeach
-        </select>
-    </form>
-
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="sortable-extra-products">
-                @forelse ($extraProducts as $product)
-                    <tr data-id="{{ $product->id }}">
-                        <td>{{ $product->name }}</td>
-                        <td>{{ Str::limit($product->description, 50) }}</td>
-                        <td>{{ number_format($product->price, 2) }} €</td>
-                        <td>{{ $product->category->name ?? 'Uncategorized' }}</td>
-                        <td class="actions">
-                            <a href="{{ route('extra-products.show', $product->id) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                            <a href="{{ route('extra-products.edit', $product->id) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                            <form action="{{ route('extra-products.destroy', $product->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">No Extra Products found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-            {{ $extraProducts->links() }}
+                    <!-- Pagination -->
+                    <div class="mt-6">
+                        {{ $extraProducts->links() }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</x-app-layout>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script>
-$(function() {
-    $("#sortable-extra-products").sortable({
-        update: function(event, ui) {
-            var sortedIDs = $(this).sortable('toArray', { attribute: 'data-id' });
-            $.ajax({
-                url: '{{ route("extra-products.sort") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    order: sortedIDs
-                },
-                success: function(response) {
-                    console.log('Order updated successfully:', response);
-                    alert('Order updated successfully!');
-                },
-                error: function(xhr, status, error) {
-                    console.error('An error occurred:', xhr.responseText);
-                    alert('Failed to update order. Error: ' + xhr.responseText);
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(function() {
+            $("#sortable-extra-products").sortable({
+                update: function(event, ui) {
+                    var sortedIDs = $(this).sortable('toArray', { attribute: 'data-id' });
+                    $.ajax({
+                        url: '{{ route("extra-products.sort") }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            order: sortedIDs
+                        },
+                        success: function(response) {
+                            console.log('Order updated successfully:', response);
+                            alert('Order updated successfully!');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('An error occurred:', xhr.responseText);
+                            alert('Failed to update order. Error: ' + xhr.responseText);
+                        }
+                    });
                 }
             });
-        }
-    });
-    $("#sortable-extra-products").disableSelection();
-});
-</script>
+            $("#sortable-extra-products").disableSelection();
+        });
+    </script>
+</x-app-layout>

@@ -73,7 +73,7 @@ List-style:none;margin:0;padding:0 5px;
 }
     </style>
 </head>
-<body> 
+<body>
 <?php $logo = App\Models\Message::where('category',"LOGO")->first(); ?>
 <div class="ticket">
         <p class="centered">
@@ -139,16 +139,16 @@ $option = (object) $option;
 @if($option->checked)
 <li><span>&#10003;</span>  {{ $option->name }}<li>@endif
             @endforeach
-      
+
     </ul>
           @endif
 
 <ul class="menu">
-@if($menu) 
+@if($menu)
 @foreach($menu->itemsTree as $item)
 @php
 $item = (object) $item;
-@endphp 
+@endphp
 @include('orders.menu', ['item' => $item])
             @endforeach
             @endif
@@ -166,20 +166,20 @@ $feMax = $fee->fee;
                                 </tr>
                                     <tr>
                                         <td style="background:lightblue;" colspan=4>
-                                            
-                                            
+
+
                                          </td>
                                     </tr>
                                 </tr>
                             </tr>
-                            @php 
+                            @php
                                 $orderTotal += $itemTotal + $optionTotal;
                             @endphp
                         @endforeach
                         <tr>
                             <td colspan="3" style="text-align: right;"><strong>Order SubTotal:</strong></td>
                             <td><strong>{{ number_format($orderTotal, 2) }} €</strong></td>
-                        </tr> 
+                        </tr>
                         <tr>
                             <td colspan="3" style="text-align: right;"><strong>Tip:</strong></td>
                             <td><strong>{{ number_format($order->tip, 2) }} €</strong></td>
@@ -188,12 +188,12 @@ $feMax = $fee->fee;
                             <td colspan="3" style="text-align: right;"><strong>Shipping Feee:</strong></td>
                             <td><strong>{{ number_format($feMax, 2) }} €</strong></td>
                         </tr>
-                        
+
                          <tr>
                             <td colspan="3" style="text-align: right;"><strong>Order Total:</strong></td>
                             <td><strong>{{ number_format($orderTotal + $order->tip + $feMax, 2) }} €</strong></td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
 
