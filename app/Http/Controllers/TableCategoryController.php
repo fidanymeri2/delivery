@@ -90,7 +90,20 @@ class TableCategoryController extends Controller
     // API Methods
     public function apiIndex()
     {
-        $categories = TableCategory::with('tables')->orderBy('sort_order')->get();
+        $categories = TableCategory::with(['tables' => function($query) {
+            $query->orderBy('sort_order');
+        }])->where('status', 'active')->get();
+
+        // Load positions separately for better control
+        foreach ($categories as $category) {
+            foreach ($category->tables as $table) {
+                $table->positions = \App\Models\TablePosition::where('restaurant_table_id', $table->id)
+                    ->where('table_category_id', $category->id)
+                    ->where('is_active', true)
+                    ->get();
+            }
+        }
+
         return response()->json([
             'success' => true,
             'data' => $categories
