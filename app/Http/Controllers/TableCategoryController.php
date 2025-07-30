@@ -90,7 +90,7 @@ class TableCategoryController extends Controller
     // API Methods
     public function apiIndex()
     {
-        $categories = TableCategory::orderBy('sort_order')->get();
+        $categories = TableCategory::with('tables')->orderBy('sort_order')->get();
         return response()->json([
             'success' => true,
             'data' => $categories
